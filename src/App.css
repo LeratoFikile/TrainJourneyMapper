@@ -1,0 +1,660 @@
+.game-shell {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background: linear-gradient(180deg, #7cd0ff 0%, #d7f0ff 30%, #f4d085 100%);
+  overflow: hidden;
+  color: #fff;
+}
+
+.top-bar {
+  position: relative;
+  z-index: 10;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.15rem 1.4rem 0;
+}
+
+.coin-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.5rem 1.15rem 0.5rem 0.7rem;
+  border-radius: 999px;
+  background: linear-gradient(180deg, #f9d16c, #d98617);
+  box-shadow: inset 0 0 0 4px rgba(214, 141, 31, 0.8), 0 5px 0 rgba(126, 68, 8, 0.8);
+  border: 3px solid #f5f1d4;
+  color: #fff;
+  font-weight: 900;
+  text-shadow: 0 2px 0 rgba(0, 0, 0, 0.25);
+}
+
+.coin-mark {
+  display: inline-flex;
+  width: 2.3rem;
+  height: 2.3rem;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: linear-gradient(180deg, #f5d267, #d78314);
+  border: 3px solid #fef4ca;
+  box-shadow: inset 0 0 0 2px rgba(0, 0, 0, 0.08);
+  font-size: 1.25rem;
+  color: #7c3f00;
+}
+
+.coin-value {
+  font-size: 2.3rem;
+  line-height: 1;
+  letter-spacing: 0.08em;
+}
+
+.menu-button {
+  width: 4.2rem;
+  height: 4.2rem;
+  border: 0;
+  border-radius: 1.2rem;
+  background: linear-gradient(180deg, #77c94f, #4b8f25);
+  box-shadow: inset 0 0 0 4px rgba(255, 255, 255, 0.15), 0 6px 0 rgba(55, 103, 20, 0.9);
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+}
+
+.menu-lines {
+  position: relative;
+  display: block;
+  width: 2rem;
+  height: 0.3rem;
+  border-radius: 999px;
+  background: #fff;
+  box-shadow: 0 -0.65rem 0 #fff, 0 0.65rem 0 #fff;
+}
+
+.hero-title {
+  position: relative;
+  z-index: 2;
+  text-align: center;
+  margin-top: 0.3rem;
+  font-family: "Arial Black", "Segoe UI", sans-serif;
+  text-transform: uppercase;
+  color: #f7d661;
+  text-shadow: 0 0.2rem 0 rgba(179, 103, 12, 0.9), 0 0.55rem 0 rgba(255, 204, 90, 0.45);
+}
+
+.title-main,
+.title-accent,
+.title-sub {
+  margin: 0;
+  letter-spacing: 0.01em;
+  line-height: 0.86;
+}
+
+.title-main {
+  font-size: clamp(4rem, 10vw, 11rem);
+}
+
+.title-accent {
+  font-size: clamp(2.8rem, 7vw, 7rem);
+  margin-top: -0.35rem;
+  color: #f7c756;
+}
+
+.title-sub {
+  font-size: clamp(2.2rem, 5vw, 4rem);
+  margin-top: 0.2rem;
+  color: #f8d564;
+}
+
+.map-scene {
+  position: relative;
+  flex: 1;
+  min-height: 52rem;
+  margin-top: 0.5rem;
+  background: linear-gradient(180deg, rgba(255,255,255,0) 0%, rgba(194,125,28,0.12) 100%);
+}
+
+.mountain {
+  position: absolute;
+  bottom: 17.5rem;
+  border-radius: 40% 60% 0 0 / 100% 100% 0 0;
+  background: linear-gradient(180deg, #d5d9d3 0%, #b9c1bc 35%, #8d9aa2 100%);
+  box-shadow: inset -1rem -0.8rem 0 rgba(0, 0, 0, 0.08);
+}
+
+.mountain-left {
+  left: -2rem;
+  width: 20rem;
+  height: 12rem;
+}
+
+.mountain-right {
+  right: -1rem;
+  width: 23rem;
+  height: 13rem;
+}
+
+.mountain-mid {
+  left: 50%;
+  transform: translateX(-50%);
+  width: 30rem;
+  height: 16rem;
+  opacity: 0.8;
+}
+
+.route-container {
+  position: absolute;
+  inset: 4.5rem 0 0 0;
+}
+
+.route-track {
+  position: absolute;
+  border: 0.8rem solid #7d665d;
+  border-top-color: #9f8680;
+  border-left-color: #6b5557;
+  border-radius: 50% 50% 35% 35%;
+  background: linear-gradient(180deg, #8d6d5f 0%, #564540 100%);
+  box-shadow: inset 0 0 0 0.45rem #8b6a5d, inset 0 0 0 0.8rem #5e4c47;
+}
+
+.track-main {
+  left: 50%;
+  transform: translateX(-50%);
+  width: 80%;
+  max-width: 42rem;
+  height: 14rem;
+  top: 25%;
+  border-radius: 50% 50% 40% 40%;
+  border-width: 1rem;
+}
+
+.track-branch-left {
+  left: 12%;
+  top: 32%;
+  width: 31%;
+  height: 12rem;
+  transform: rotate(32deg);
+  border-radius: 52% 48% 40% 60%;
+}
+
+.track-branch-right {
+  right: 12%;
+  top: 33%;
+  width: 30%;
+  height: 12rem;
+  transform: rotate(-34deg);
+  border-radius: 52% 48% 60% 40%;
+}
+
+.track-branch-lower {
+  left: 26%;
+  bottom: 12.5rem;
+  width: 48%;
+  height: 11rem;
+  transform: rotate(6deg);
+  border-radius: 50% 50% 32% 68%;
+}
+
+.stop {
+  position: absolute;
+  z-index: 3;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.stop-label {
+  font-family: "Arial Black", "Segoe UI", sans-serif;
+  text-transform: uppercase;
+  color: #f9e29f;
+  font-size: clamp(1.1rem, 2vw, 2vw);
+  letter-spacing: 0.06em;
+  text-shadow: 0 0.18rem 0 rgba(133, 71, 17, 0.85);
+  margin-bottom: 0.5rem;
+}
+
+.station-node {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 7.1rem;
+  height: 7.1rem;
+  border-radius: 50%;
+  background: linear-gradient(180deg, #8d979d 0%, #6b757d 100%);
+  border: 0.4rem solid #d7d7d7;
+  box-shadow: inset 0 0 0 0.25rem rgba(71, 79, 83, 0.8), 0 0.4rem 0 rgba(52, 60, 62, 0.8);
+}
+
+.unlocked-node {
+  background: linear-gradient(180deg, #b2c4cc 0%, #7b8e96 100%);
+}
+
+.compact-node {
+  width: 6.2rem;
+  height: 6.2rem;
+}
+
+.station-lock {
+  position: absolute;
+  top: 1.1rem;
+  width: 2.3rem;
+  height: 2.3rem;
+  font-size: 2rem;
+  line-height: 1;
+}
+
+.station-score {
+  position: absolute;
+  bottom: 0.9rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 2.4rem;
+  height: 2.4rem;
+  border-radius: 50%;
+  background: linear-gradient(180deg, #f8db8a, #d9a527);
+  border: 0.18rem solid #f9f1d5;
+  color: #fff;
+  font-size: 1.5rem;
+  font-weight: 900;
+  text-shadow: 0 0.1rem 0 rgba(0, 0, 0, 0.2);
+}
+
+.stop-cape-town {
+  left: 22%;
+  top: 8%;
+}
+
+.stop-wellington {
+  left: 6%;
+  top: 26%;
+}
+
+.stop-bellville {
+  right: 17%;
+  top: 28%;
+}
+
+.stop-kimberley {
+  left: 8%;
+  bottom: 17.5rem;
+}
+
+.stop-beaufort-west {
+  left: 39%;
+  bottom: 14rem;
+}
+
+.stop-de-aar {
+  right: 22%;
+  bottom: 17rem;
+}
+
+.stop-worcester {
+  right: 8%;
+  bottom: 20.5rem;
+}
+
+.mini-button {
+  margin-top: 0.95rem;
+  border: 0;
+  border-radius: 999px;
+  background: linear-gradient(180deg, #7ae06d, #3ea32c);
+  box-shadow: inset 0 0 0 0.25rem rgba(255,255,255,0.15), 0 0.45rem 0 rgba(30, 111, 15, 0.9);
+  color: #fff;
+  font-family: "Arial Black", "Segoe UI", sans-serif;
+  font-size: 1.25rem;
+  padding: 0.8rem 1.8rem;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+
+.city-center {
+  position: absolute;
+  left: 50%;
+  bottom: 7.2rem;
+  transform: translateX(-50%);
+  z-index: 5;
+}
+
+.city-ring {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 24rem;
+  padding: 2rem 1.2rem 1.5rem;
+  border-radius: 50%;
+  background: radial-gradient(circle at center, rgba(87, 178, 220, 0.9) 0%, rgba(80, 150, 210, 0.92) 48%, rgba(65, 120, 171, 0.95) 100%);
+  border: 0.65rem solid #f5d766;
+  box-shadow: inset 0 0 0 0.45rem rgba(255,255,255,0.17), 0 0.55rem 0 rgba(102, 84, 16, 0.8);
+}
+
+.city-badge {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.25rem;
+  width: 100%;
+}
+
+.city-name {
+  font-family: "Arial Black", "Segoe UI", sans-serif;
+  font-size: clamp(2rem, 3vw, 3.5rem);
+  color: #f9de7d;
+  text-shadow: 0 0.15rem 0 rgba(132, 75, 8, 0.8);
+}
+
+.city-avatar {
+  font-size: 4.4rem;
+  line-height: 1;
+  margin-top: 0.3rem;
+}
+
+.city-score {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 3.1rem;
+  height: 3.1rem;
+  border-radius: 50%;
+  background: linear-gradient(180deg, #f6d15e, #e29b1d);
+  border: 0.3rem solid #fef3c4;
+  font-family: "Arial Black", "Segoe UI", sans-serif;
+  font-size: 1.6rem;
+  color: #fff;
+  margin-top: 0.1rem;
+}
+
+.star-row {
+  display: flex;
+  gap: 0.35rem;
+  font-size: 1.7rem;
+  margin-top: 0.3rem;
+}
+
+.play-button {
+  margin-top: 1.1rem;
+  border: 0;
+  border-radius: 999px;
+  background: linear-gradient(180deg, #7ae06d, #42a730);
+  box-shadow: inset 0 0 0 0.25rem rgba(255,255,255,0.16), 0 0.45rem 0 rgba(29, 109, 18, 0.9);
+  color: #fff;
+  font-family: "Arial Black", "Segoe UI", sans-serif;
+  font-size: clamp(1.7rem, 2.4vw, 2.3rem);
+  letter-spacing: 0.04em;
+  padding: 0.9rem 3rem;
+  cursor: pointer;
+}
+
+.train-vehicle {
+  position: absolute;
+  left: 50%;
+  bottom: 0.4rem;
+  transform: translateX(-50%);
+  z-index: 7;
+  display: flex;
+  align-items: flex-end;
+  gap: 0.35rem;
+}
+
+.engine,
+.wagon {
+  position: relative;
+  height: 5.8rem;
+  border-radius: 1.1rem;
+  background: linear-gradient(180deg, #d74435 0%, #b32a20 55%, #8d1c16 100%);
+  box-shadow: inset 0 0 0 0.3rem rgba(255,255,255,0.12), 0 0.55rem 0 rgba(90, 22, 18, 0.8);
+}
+
+.engine {
+  width: 10.5rem;
+}
+
+.wagon {
+  width: 7rem;
+  border-radius: 1rem 0.8rem 0.7rem 1rem;
+}
+
+.engine-cabin {
+  position: absolute;
+  left: 1.2rem;
+  top: 0.8rem;
+  width: 4.1rem;
+  height: 3.3rem;
+  border-radius: 0.8rem 0.8rem 0.6rem 0.6rem;
+  background: linear-gradient(180deg, #f7f7f7 0%, #d5d8db 100%);
+  border: 0.2rem solid #d1dae1;
+}
+
+.engine-window {
+  position: absolute;
+  left: 2rem;
+  top: 1.5rem;
+  width: 2.5rem;
+  height: 1.8rem;
+  border-radius: 0.5rem;
+  background: linear-gradient(180deg, #7dd4ff, #2a7bc5);
+  border: 0.15rem solid rgba(24, 46, 100, 0.75);
+}
+
+.engine-front {
+  position: absolute;
+  right: -0.3rem;
+  top: 1.2rem;
+  width: 2.4rem;
+  height: 2.5rem;
+  border-radius: 0.7rem 1rem 1rem 0.7rem;
+  background: linear-gradient(180deg, #efefef, #c8d0d5);
+}
+
+.engine-smoke {
+  position: absolute;
+  left: 6rem;
+  top: -1.8rem;
+  width: 0.8rem;
+  height: 0.8rem;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.75);
+  box-shadow: -1.2rem 0 0 rgba(255,255,255,0.45), -2.4rem -0.6rem 0 rgba(255,255,255,0.26);
+}
+
+.engine-chimney {
+  position: absolute;
+  right: 1.6rem;
+  top: -1.2rem;
+  width: 1rem;
+  height: 1.4rem;
+  border-radius: 0.35rem 0.35rem 0 0;
+  background: #f4d57b;
+  border: 0.12rem solid rgba(120, 101, 28, 0.7);
+}
+
+.wagon-window {
+  position: absolute;
+  top: 1.2rem;
+  width: 1.2rem;
+  height: 1.5rem;
+  border-radius: 0.4rem;
+  background: linear-gradient(180deg, #7ad5ff, #2d78d5);
+  border: 0.12rem solid rgba(31, 61, 142, 0.8);
+}
+
+.wagon-window:nth-child(1) { left: 1.5rem; }
+.wagon-window:nth-child(2) { left: 3rem; }
+.wagon-window:nth-child(3) { left: 4.5rem; }
+
+.wheel {
+  position: absolute;
+  bottom: -0.9rem;
+  width: 1.5rem;
+  height: 1.5rem;
+  border-radius: 50%;
+  background: #3b2d2b;
+  border: 0.3rem solid #d3b268;
+}
+
+.wheel-front { left: 1.6rem; }
+.wheel-back { right: 1.3rem; }
+
+.bottom-nav {
+  position: relative;
+  z-index: 10;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 0.7rem;
+  padding: 0.6rem 1rem 1.1rem;
+  background: linear-gradient(180deg, rgba(255,255,255,0.12), transparent 30%);
+}
+
+.nav-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.45rem;
+  min-height: 5.7rem;
+  border: 0;
+  border-radius: 1.2rem;
+  background: linear-gradient(180deg, #78d95c, #4bb536);
+  box-shadow: inset 0 0 0 0.3rem rgba(255,255,255,0.18), 0 0.42rem 0 rgba(29, 103, 19, 0.9);
+  color: #fff;
+  font-family: "Arial Black", "Segoe UI", sans-serif;
+  font-size: 0.9rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+
+.nav-item.active {
+  background: linear-gradient(180deg, #6bd673, #38a130);
+}
+
+.nav-icon {
+  font-size: 2rem;
+  line-height: 1;
+}
+
+.house-icon {
+  font-size: 2.2rem;
+}
+
+@media (max-width: 780px) {
+  .coin-value {
+    font-size: 1.75rem;
+  }
+
+  .map-scene {
+    min-height: 44rem;
+  }
+
+  .city-ring {
+    width: 18rem;
+    padding-top: 1.5rem;
+  }
+
+  .stop-cape-town { left: 18%; top: 14%; }
+  .stop-wellington { left: 3%; top: 31%; }
+  .stop-bellville { right: 13%; top: 30%; }
+  .stop-kimberley { left: 5%; bottom: 20rem; }
+  .stop-beaufort-west { left: 36%; bottom: 17rem; }
+  .stop-de-aar { right: 18%; bottom: 20rem; }
+  .stop-worcester { right: 8%; bottom: 23rem; }
+}
+
+@media (max-width: 520px) {
+  .top-bar {
+    padding-inline: 0.8rem;
+  }
+
+  .coin-badge {
+    padding-right: 0.8rem;
+  }
+
+  .coin-mark {
+    width: 1.8rem;
+    height: 1.8rem;
+    font-size: 1rem;
+  }
+
+  .coin-value {
+    font-size: 1.4rem;
+  }
+
+  .menu-button {
+    width: 3.3rem;
+    height: 3.3rem;
+  }
+
+  .title-main {
+    font-size: 3.7rem;
+  }
+
+  .title-accent {
+    font-size: 2.8rem;
+  }
+
+  .title-sub {
+    font-size: 2.1rem;
+  }
+
+  .map-scene {
+    min-height: 38rem;
+  }
+
+  .station-node {
+    width: 5.5rem;
+    height: 5.5rem;
+  }
+
+  .compact-node {
+    width: 4.8rem;
+    height: 4.8rem;
+  }
+
+  .stop-label {
+    font-size: 0.8rem;
+  }
+
+  .mini-button {
+    font-size: 0.8rem;
+    padding: 0.7rem 1.2rem;
+  }
+
+  .city-ring {
+    width: 15rem;
+  }
+
+  .city-name {
+    font-size: 1.5rem;
+  }
+
+  .city-avatar {
+    font-size: 3rem;
+  }
+
+  .play-button {
+    font-size: 1.3rem;
+    padding-inline: 2.2rem;
+  }
+
+  .engine {
+    width: 8rem;
+  }
+
+  .wagon {
+    width: 5.5rem;
+  }
+
+  .bottom-nav {
+    gap: 0.45rem;
+    padding-inline: 0.7rem;
+  }
+
+  .nav-item {
+    min-height: 4.8rem;
+    font-size: 0.68rem;
+  }
+}

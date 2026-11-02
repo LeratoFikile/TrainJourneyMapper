@@ -1,0 +1,118 @@
+.mini-games-menu {
+  display: grid;
+  min-height: 100dvh;
+  place-items: center;
+  overflow: auto;
+  padding: 18px;
+  background: #443426;
+}
+
+.mini-games-scroll {
+  position: relative;
+  width: min(520px, 100%);
+  min-height: min(850px, calc(100dvh - 36px));
+  display: grid;
+  place-items: center;
+}
+
+.mini-games-scroll-art {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: fill;
+  pointer-events: none;
+}
+
+.mini-games-menu-content {
+  position: relative;
+  display: flex;
+  width: 72%;
+  min-height: 72%;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  padding: 62px 0 42px;
+  color: #4b3a33;
+  text-align: center;
+}
+
+.mini-games-menu-content h1 {
+  margin: 0;
+  color: #804b23;
+  font-size: clamp(28px, 6vw, 44px);
+}
+
+.mini-games-menu-content > p {
+  margin: -10px 0 4px;
+  font-weight: 800;
+}
+
+.mini-games-menu-back {
+  position: absolute;
+  top: 12px;
+  left: 0;
+  padding: 7px 12px;
+  border: 2px solid #fff3c4;
+  border-radius: 14px;
+  color: #4b3a33;
+  background: #f6d66d;
+  box-shadow: 0 3px 0 #a96749;
+  cursor: pointer;
+  font-weight: 900;
+}
+
+.mini-games-choice {
+  display: grid;
+  width: 100%;
+  min-height: 88px;
+  grid-template-columns: minmax(0, 1fr);
+  justify-items: center;
+  gap: 4px;
+  padding: 8px 14px;
+  border: 3px solid #a96749;
+  border-radius: 18px;
+  color: #4b3a33;
+  background: rgba(255, 246, 216, .94);
+  box-shadow: 0 5px 0 #8f593d;
+  cursor: pointer;
+  font-size: clamp(15px, 3vw, 20px);
+  font-weight: 900;
+}
+
+.mini-games-choice:hover {
+  background: #ffe28a;
+  transform: translateY(-2px);
+}
+
+.mini-games-choice img {
+  width: min(230px, 90%);
+  height: 52px;
+  object-fit: contain;
+}
+
+@media (max-width: 520px) {
+  .mini-games-menu {
+    padding: 8px;
+  }
+
+  .mini-games-scroll {
+    min-height: calc(100dvh - 16px);
+  }
+
+  .mini-games-menu-content {
+    width: 70%;
+    gap: 12px;
+    padding-top: 52px;
+  }
+
+  .mini-games-choice {
+    min-height: 76px;
+    padding: 6px 10px;
+  }
+
+  .mini-games-choice img {
+    height: 43px;
+  }
+}

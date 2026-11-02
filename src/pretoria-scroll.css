@@ -1,0 +1,7 @@
+.pretoria-game {
+  min-height: 100vh;
+  height: auto;
+  overflow-x: hidden;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+}

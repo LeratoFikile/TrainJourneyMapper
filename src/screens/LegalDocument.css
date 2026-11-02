@@ -1,0 +1,165 @@
+.legal-screen {
+  position: fixed;
+  inset: 0;
+  z-index: 10000;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  padding: 8px;
+  background: rgba(48, 34, 24, .96);
+  font-family: "Trebuchet MS", "Segoe UI", sans-serif;
+}
+
+.auth-scroll-frame {
+  position: relative;
+  width: min(100vw, calc(100dvh * .6667), 900px);
+  aspect-ratio: 2 / 3;
+  filter: drop-shadow(0 12px 20px rgba(0, 0, 0, .45));
+}
+
+.auth-scroll-art {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: fill;
+  pointer-events: none;
+}
+
+.auth-game-logo {
+  display: block;
+  width: clamp(110px, 30%, 185px);
+  height: auto;
+  flex: 0 0 auto;
+  align-self: center;
+  object-fit: contain;
+}
+
+.legal-scroll-frame {
+  position: relative;
+  width: min(96vw, calc((100dvh - 16px) * .6667), 760px);
+  aspect-ratio: 2 / 3;
+  filter: drop-shadow(0 12px 20px rgba(0, 0, 0, .45));
+}
+
+.legal-scroll-art {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: fill;
+  pointer-events: none;
+}
+
+.legal-scroll-content {
+  position: absolute;
+  inset: 13.5% 15% 13%;
+  display: flex;
+  min-height: 0;
+  flex-direction: column;
+  color: #4b321f;
+}
+
+.legal-game-logo {
+  display: block;
+  width: clamp(110px, 30%, 190px);
+  height: auto;
+  flex: 0 0 auto;
+  align-self: center;
+  margin: 0 auto 5px;
+  object-fit: contain;
+}
+
+.legal-back {
+  align-self: flex-start;
+  flex: 0 0 auto;
+  min-height: 30px;
+  padding: 4px 11px;
+  border: 1px solid #84501f;
+  border-radius: 999px;
+  color: #fff1c8;
+  background: #75421f;
+  box-shadow: 0 2px 0 #4e2d18;
+  cursor: pointer;
+  font: inherit;
+  font-size: clamp(11px, 1.5vw, 14px);
+  font-weight: 800;
+}
+
+.legal-document-copy {
+  min-height: 0;
+  flex: 1;
+  overflow-y: auto;
+  padding: 3px 8px 8px;
+  scrollbar-color: #895426 rgba(112, 62, 27, .12);
+  scrollbar-width: thin;
+}
+
+.legal-document-copy h1 {
+  margin: 4px 0 5px;
+  color: #623919;
+  font-size: clamp(17px, 2.5vw, 24px);
+  line-height: 1.12;
+  text-align: center;
+}
+
+.legal-updated {
+  margin: 0 0 14px;
+  font-size: clamp(11px, 1.55vw, 13px);
+  font-style: italic;
+  text-align: center;
+}
+
+.legal-section {
+  margin: 0 0 13px;
+}
+
+.legal-section h2 {
+  margin: 0 0 4px;
+  color: #75451f;
+  font-size: clamp(14px, 1.9vw, 17px);
+  line-height: 1.2;
+}
+
+.legal-section p {
+  margin: 0 0 7px;
+  font-size: clamp(12px, 1.65vw, 14px);
+  font-weight: 500;
+  line-height: 1.42;
+  overflow-wrap: anywhere;
+}
+
+.legal-section a {
+  color: #713e18;
+  font-weight: 800;
+}
+
+.legal-back-bottom {
+  align-self: center;
+  margin-top: 5px;
+}
+
+@media (max-width: 560px) {
+  .legal-scroll-frame {
+    width: min(98vw, calc((100dvh - 12px) * .6667));
+  }
+
+  .legal-scroll-content {
+    inset: 14.5% 14% 13.5%;
+  }
+
+  .legal-document-copy {
+    padding-right: 5px;
+    padding-left: 5px;
+  }
+
+  .legal-section {
+    margin-bottom: 11px;
+  }
+
+  .legal-section p {
+    font-size: 12px;
+    line-height: 1.38;
+  }
+}

@@ -1,0 +1,230 @@
+.home-screen {
+  position: relative;
+  width: 100%;
+  min-height: 100vh;
+  min-height: 100dvh;
+  overflow: hidden;
+  background: #dfeef7;
+}
+
+.home-scene {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: min(100vw, 56.25dvh);
+  height: min(100dvh, 177.7778vw);
+  transform: translate(-50%, -50%);
+}
+
+.home-background {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  pointer-events: none;
+}
+
+.home-background-action {
+  position: absolute;
+  z-index: 1;
+  padding: 0;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  cursor: pointer;
+}
+
+.home-background-action-start {
+  top: 65.5%;
+  left: 50%;
+  width: min(78vw, 36vh);
+  height: 7.5%;
+  transform: translateX(-50%);
+}
+
+.home-background-action-continue {
+  top: 73%;
+  left: 50%;
+  width: min(48vw, 22vh);
+  height: 6.5%;
+  transform: translateX(-50%);
+}
+
+.home-background-action-journeys {
+  top: 83%;
+  left: 8%;
+  width: 18%;
+  height: 12%;
+}
+
+.home-background-action-collection {
+  top: 83%;
+  left: 30%;
+  width: 18%;
+  height: 12%;
+}
+
+.home-background-action-settings {
+  top: 83%;
+  left: 74%;
+  width: 18%;
+  height: 12%;
+}
+
+.home-background-action-map {
+  top: 83%;
+  left: 52%;
+  width: 18%;
+  height: 12%;
+}
+
+.home-mini-games-button {
+  position: absolute;
+  top: 2.5%;
+  right: 3%;
+  z-index: 3;
+  display: grid;
+  width: clamp(48px, 6vw, 64px);
+  aspect-ratio: 1;
+  place-items: center;
+  padding: 10px;
+  border: 3px solid #fff3c4;
+  border-radius: 50%;
+  color: #4b3a33;
+  background: #f6d66d;
+  box-shadow: 0 4px 0 #a96749, 0 7px 10px rgba(61, 43, 34, .28);
+  cursor: pointer;
+}
+
+.home-mini-games-button svg {
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  fill: #a96749;
+  stroke: #4b3a33;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 2.5;
+}
+
+.home-mini-games-button svg path:first-child {
+  fill: #ffe8a0;
+}
+
+.home-mini-games-button:hover {
+  background: #ffe28a;
+  transform: translateY(-2px);
+}
+
+.home-map-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 20;
+  display: grid;
+  place-items: center;
+  padding: clamp(12px, 3vw, 32px);
+  background: rgba(15, 25, 16, .78);
+}
+
+.home-map-dialog {
+  position: relative;
+  display: grid;
+  width: min(1100px, 100%);
+  max-height: 100%;
+  place-items: center;
+}
+
+.home-map-dialog > img {
+  display: block;
+  width: 100%;
+  max-height: calc(100dvh - 48px);
+  object-fit: contain;
+  border: 4px solid #f8df8d;
+  border-radius: 16px;
+  box-shadow: 0 12px 36px rgba(0, 0, 0, .45);
+}
+
+.home-journeys-dialog {
+  grid-template-rows: auto minmax(0, 1fr) auto;
+  gap: 10px;
+  padding: clamp(14px, 2vw, 24px);
+  border: 4px solid #f8df8d;
+  border-radius: 20px;
+  background: #fff4cf;
+  box-shadow: 0 12px 36px rgba(0, 0, 0, .45);
+}
+
+.home-journeys-dialog > img {
+  width: 100%;
+  max-height: calc(100dvh - 150px);
+  border: 0;
+  border-radius: 8px;
+  box-shadow: none;
+}
+
+.home-journeys-title {
+  margin: 0 48px 0 0;
+  color: #60442d;
+  font-size: clamp(18px, 3vw, 28px);
+  text-align: center;
+}
+
+.home-journeys-controls {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  color: #4b3a33;
+  font-weight: 800;
+}
+
+.home-journeys-controls button {
+  min-width: 90px;
+  padding: 8px 14px;
+  border: 2px solid #a96749;
+  border-radius: 12px;
+  color: #4b3a33;
+  background: #f6d66d;
+  cursor: pointer;
+  font-weight: 800;
+}
+
+.home-journeys-controls button:disabled {
+  cursor: default;
+  opacity: .5;
+}
+
+.home-map-close {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  z-index: 1;
+  display: grid;
+  width: 42px;
+  height: 42px;
+  place-items: center;
+  border: 2px solid #fff7d8;
+  border-radius: 50%;
+  color: #fff7d8;
+  background: #ba623b;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, .45);
+  cursor: pointer;
+  font-size: 30px;
+  line-height: 1;
+}
+
+.home-background-action:focus-visible {
+  outline: 4px solid #fff3c4;
+  outline-offset: 3px;
+}
+
+@media (min-aspect-ratio: 9/16) {
+  .home-background-action-start {
+    width: 78%;
+  }
+
+  .home-background-action-continue { width: 48%; }
+}

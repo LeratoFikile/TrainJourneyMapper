@@ -1,0 +1,811 @@
+.pretoria-level-image {
+  position: relative;
+  width: 100%;
+  min-height: 100dvh;
+  overflow: hidden;
+  background: #9edcf2;
+}
+
+.pretoria-level-image img {
+  display: block;
+  width: 100%;
+  height: 100dvh;
+  object-fit: cover;
+  object-position: center;
+}
+
+.pretoria-back-button {
+  position: absolute;
+  top: 22px;
+  left: 24px;
+  z-index: 6;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 8px 13px 8px 10px;
+  border: 3px solid #fff3c4;
+  border-radius: 18px;
+  color: #4b3a33;
+  background: #f6d66d;
+  box-shadow: 0 4px 0 #a96749, 0 7px 10px rgba(61, 43, 34, .22);
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.pretoria-back-button span {
+  font-size: 20px;
+  line-height: .8;
+}
+
+.pretoria-back-button:hover {
+  background: #ffe28a;
+  transform: translateY(-2px);
+}
+
+.pretoria-needs {
+  position: absolute;
+  top: 22px;
+  right: 24px;
+  z-index: 5;
+  display: grid;
+  gap: 7px;
+  width: 116px;
+  pointer-events: none;
+}
+
+.train-countdown {
+  position: absolute;
+  top: 22px;
+  left: 50%;
+  z-index: 6;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 14px;
+  border: 3px solid #fff3c4;
+  border-radius: 18px;
+  color: #fffaf0;
+  background: rgba(75, 58, 51, .82);
+  box-shadow: 0 4px 0 #a96749, 0 7px 10px rgba(61, 43, 34, .22);
+  font-size: 13px;
+  font-weight: 800;
+  transform: translateX(-50%);
+}
+
+.train-countdown strong {
+  color: #f6d66d;
+  font-size: 18px;
+  font-variant-numeric: tabular-nums;
+}
+
+.train-countdown-urgent strong {
+  color: #ef6b72;
+}
+
+.pretoria-level-game-over > :not(.pretoria-game-over) {
+  filter: grayscale(1);
+}
+
+.pretoria-game-over {
+  position: absolute;
+  inset: 0;
+  z-index: 10;
+  display: grid;
+  place-content: center;
+  justify-items: center;
+  gap: 14px;
+  background: rgba(38, 38, 38, .42);
+}
+
+.pretoria-game-over p {
+  margin: 0;
+  color: #fffaf0;
+  font-size: clamp(22px, 3vw, 36px);
+  font-weight: 900;
+  text-shadow: 0 3px 0 #4b3a33;
+}
+
+.pretoria-game-over-actions {
+  display: flex;
+  gap: 12px;
+}
+
+.pretoria-game-over-actions button {
+  display: grid;
+  width: 52px;
+  height: 52px;
+  place-items: center;
+  padding: 0;
+  border: 3px solid #fff3c4;
+  border-radius: 50%;
+  color: #4b3a33;
+  background: #f6d66d;
+  box-shadow: 0 4px 0 #a96749, 0 7px 10px rgba(61, 43, 34, .28);
+  cursor: pointer;
+  font-size: 30px;
+  font-weight: 900;
+  line-height: 1;
+}
+
+.pretoria-game-over-actions button:hover {
+  background: #ffe28a;
+  transform: translateY(-2px);
+}
+
+.need-meter {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: #fffaf0;
+  font-size: 15px;
+  line-height: 1;
+  filter: drop-shadow(0 2px 2px rgba(56, 39, 32, .55));
+}
+
+.need-track {
+  width: 78px;
+  height: 7px;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, .8);
+  border-radius: 10px;
+  background: rgba(45, 42, 46, .38);
+}
+
+.need-track i {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  transition: width .4s ease;
+}
+
+.need-life .need-track i { background: #ef6b72; }
+.need-hunger .need-track i { background: #efad57; }
+.need-water .need-track i { background: #69bce4; }
+
+.wallet-balance {
+  padding: 0;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: #fffaf0;
+  filter: drop-shadow(0 2px 2px rgba(56, 39, 32, .55));
+  font-size: 14px;
+  font-weight: 900;
+}
+
+.wallet-balance img {
+  width: 20px;
+  height: 20px;
+  object-fit: contain;
+}
+
+.registered-characters {
+  position: absolute;
+  right: 12%;
+  bottom: 7%;
+  left: 12%;
+  height: 42%;
+  pointer-events: none;
+}
+
+.registered-characters img {
+  position: absolute;
+  width: auto;
+  height: 100%;
+  object-fit: contain;
+  object-position: bottom;
+  filter: saturate(.88) sepia(.05) drop-shadow(0 10px 5px rgba(61, 43, 34, .28));
+}
+
+.registered-guide {
+  left: 31%;
+}
+
+.registered-traveller {
+  right: 23%;
+}
+
+.guide-speech {
+  position: absolute;
+  top: auto;
+  bottom: calc(100% + 12px);
+  left: 18%;
+  z-index: 5;
+  width: min(340px, 52vw);
+  padding: 14px 52px 14px 16px;
+  border: 3px solid #fff3c4;
+  border-radius: 22px;
+  color: #4b3a33;
+  background: #fffaf0;
+  box-shadow: 0 5px 0 #a96749, 0 9px 16px rgba(61, 43, 34, .25);
+  pointer-events: auto;
+}
+
+.guide-speech::after {
+  position: absolute;
+  bottom: -13px;
+  left: 28px;
+  width: 20px;
+  height: 20px;
+  border-right: 3px solid #fff3c4;
+  border-bottom: 3px solid #fff3c4;
+  background: #fffaf0;
+  content: "";
+  transform: rotate(45deg);
+}
+
+.guide-speech p {
+  margin: 0;
+  color: #3f3a38;
+  font-family: Georgia, serif;
+  font-size: clamp(13px, 1.15vw, 16px);
+  font-weight: 700;
+  line-height: 1.35;
+  text-align: left;
+  overflow-wrap: anywhere;
+}
+
+.guide-speech-next {
+  position: absolute;
+  right: 9%;
+  bottom: 12%;
+  display: grid;
+  width: 25px;
+  height: 25px;
+  place-items: center;
+  padding: 0;
+  border: 2px solid #fff3c4;
+  border-radius: 50%;
+  color: #4b3a33;
+  background: #f6d66d;
+  box-shadow: 0 2px 0 #a96749;
+  cursor: pointer;
+  font-size: 17px;
+  font-weight: 800;
+  line-height: 1;
+}
+
+.guide-speech-next:hover {
+  background: #ffe28a;
+  transform: translateX(2px);
+}
+
+.pretoria-inventory {
+  position: absolute;
+  inset: 0;
+  z-index: 4;
+  pointer-events: none;
+}
+
+.inventory-item {
+  position: absolute;
+  display: grid;
+  min-width: 86px;
+  gap: 2px;
+  place-items: center;
+  padding: 7px 9px;
+  border: 2px solid #fff3c4;
+  border-radius: 12px;
+  color: #4b3a33;
+  background: rgba(246, 214, 109, .95);
+  box-shadow: 0 3px 0 #a96749, 0 5px 9px rgba(61, 43, 34, .25);
+  cursor: pointer;
+  pointer-events: auto;
+  font-size: 11px;
+  font-weight: 800;
+}
+
+.inventory-item:hover {
+  background: #ffe28a;
+  transform: translateY(-3px);
+}
+
+.inventory-item-icon {
+  font-size: 27px;
+  line-height: 1;
+}
+
+.inventory-water { top: 27%; left: 14%; }
+.inventory-wallet { top: 42%; right: 14%; }
+.inventory-sandwich { bottom: 23%; left: 19%; }
+.inventory-map { right: 25%; bottom: 17%; }
+.inventory-ticket { top: 63%; left: 47%; }
+
+.pickup-dialog {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  z-index: 9;
+  display: grid;
+  width: min(360px, calc(100% - 32px));
+  gap: 16px;
+  justify-items: center;
+  padding: 22px;
+  border: 4px solid #fff3c4;
+  border-radius: 18px;
+  color: #4b3a33;
+  background: #fffaf0;
+  box-shadow: 0 7px 0 #a96749, 0 12px 22px rgba(61, 43, 34, .3);
+  text-align: center;
+  transform: translate(-50%, -50%);
+}
+
+.pickup-dialog p {
+  margin: 0;
+  font-size: 17px;
+  font-weight: 800;
+}
+
+.pickup-dialog button {
+  padding: 8px 20px;
+  border: 2px solid #fff3c4;
+  border-radius: 14px;
+  color: #4b3a33;
+  background: #f6d66d;
+  box-shadow: 0 3px 0 #a96749;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 900;
+}
+
+.pickup-dialog button:hover {
+  background: #ffe28a;
+}
+
+.pretoria-collection-button {
+  position: absolute;
+  right: 24px;
+  bottom: 22px;
+  z-index: 7;
+  display: grid;
+  width: 64px;
+  height: 64px;
+  place-items: center;
+  padding: 8px;
+  border: 3px solid #fff3c4;
+  border-radius: 50%;
+  background: #f6d66d;
+  box-shadow: 0 4px 0 #a96749, 0 7px 10px rgba(61, 43, 34, .28);
+  cursor: pointer;
+}
+
+.pretoria-collection-button img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.pretoria-collection-button:hover {
+  background: #ffe28a;
+  transform: translateY(-2px);
+}
+
+.collection-dialog {
+  position: absolute;
+  right: 24px;
+  bottom: 98px;
+  z-index: 8;
+  width: min(320px, calc(100% - 32px));
+  padding: 18px;
+  border: 4px solid #fff3c4;
+  border-radius: 18px;
+  color: #4b3a33;
+  background: #fffaf0;
+  box-shadow: 0 7px 0 #a96749, 0 12px 22px rgba(61, 43, 34, .3);
+}
+
+.collection-dialog-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  border-bottom: 2px solid #ead6a2;
+  padding-bottom: 10px;
+}
+
+.collection-dialog h2 {
+  margin: 0;
+  font-size: 20px;
+}
+
+.collection-dialog-heading button {
+  display: grid;
+  width: 28px;
+  height: 28px;
+  place-items: center;
+  padding: 0;
+  border: 2px solid #fff3c4;
+  border-radius: 50%;
+  color: #4b3a33;
+  background: #f6d66d;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 900;
+}
+
+.collection-empty {
+  margin: 20px 0 4px;
+  color: #76665b;
+  text-align: center;
+}
+
+.collection-items {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+  margin-top: 14px;
+}
+
+.board-train-button {
+  position: absolute;
+  right: 102px;
+  bottom: 29px;
+  z-index: 7;
+  margin: 0;
+  padding: 8px 14px;
+  border: 3px solid #a96749;
+  border-radius: 10px;
+  color: #fffaf0;
+  background: #ef6b72;
+  box-shadow: 0 4px 0 #a96749;
+  font-family: Georgia, serif;
+  font-size: 20px;
+  font-style: italic;
+  font-weight: 900;
+  letter-spacing: 1px;
+  text-align: center;
+  cursor: pointer;
+  transform: rotate(-2deg);
+}
+
+.board-train-button:hover {
+  background: #f47c82;
+  transform: rotate(-2deg) translateY(-2px);
+}
+
+.collection-item {
+  display: grid;
+  min-height: 76px;
+  place-items: center;
+  gap: 4px;
+  padding: 8px;
+  border: 2px solid #ead6a2;
+  border-radius: 10px;
+  background: #fff3c4;
+  font-size: 12px;
+  font-weight: 800;
+  text-align: center;
+}
+
+.collection-item button {
+  padding: 4px 10px;
+  border: 2px solid #a96749;
+  border-radius: 10px;
+  color: #4b3a33;
+  background: #f6d66d;
+  cursor: pointer;
+  font-size: 11px;
+  font-weight: 900;
+}
+
+.collection-item button:hover {
+  background: #ffe28a;
+}
+
+@media (max-width: 600px) {
+  .pretoria-back-button {
+    top: 12px;
+    left: 12px;
+    padding: 7px 10px 7px 8px;
+    font-size: 11px;
+  }
+
+  .pretoria-needs {
+    top: 14px;
+    right: 12px;
+    width: 100px;
+    gap: 5px;
+  }
+
+  .train-countdown {
+    top: 62px;
+    padding: 6px 10px;
+    font-size: 11px;
+  }
+
+  .train-countdown strong { font-size: 15px; }
+
+  .need-meter { font-size: 13px; }
+  .need-track { width: 65px; height: 6px; }
+
+  .registered-characters {
+    right: 4%;
+    bottom: 6%;
+    left: 4%;
+    height: 31%;
+  }
+
+  .registered-guide {
+    left: 24%;
+  }
+
+  .registered-traveller {
+    right: 12%;
+  }
+
+  .guide-speech {
+    top: auto;
+    bottom: calc(100% + 10px);
+    left: 12%;
+    width: min(340px, 76vw);
+    padding: 12px 48px 12px 14px;
+  }
+
+  .inventory-item {
+    min-width: 74px;
+    padding: 5px 6px;
+    font-size: 9px;
+  }
+
+  .inventory-item-icon { font-size: 23px; }
+  .inventory-water { top: 25%; left: 7%; }
+  .inventory-wallet { top: 40%; right: 7%; }
+  .inventory-sandwich { bottom: 20%; left: 8%; }
+  .inventory-map { right: 9%; bottom: 14%; }
+  .inventory-ticket { top: 61%; left: 42%; }
+
+  .pretoria-collection-button {
+    right: 12px;
+    bottom: 14px;
+    width: 54px;
+    height: 54px;
+  }
+
+  .board-train-button {
+    right: 78px;
+    bottom: 20px;
+    padding: 7px 9px;
+    font-size: 12px;
+  }
+
+  .collection-dialog {
+    right: 12px;
+    bottom: 82px;
+  }
+}
+
+.wallet-balance:hover {
+  transform: translateY(-2px) scale(1.04);
+}
+
+.de-aar-shop-button {
+  position: absolute;
+  top: 51%;
+  right: 13%;
+  z-index: 7;
+  display: grid;
+  width: 50px;
+  height: 50px;
+  place-items: center;
+  padding: 5px;
+  border: 3px solid #fff3c4;
+  border-radius: 50%;
+  color: #4b3a33;
+  background: #f6d66d;
+  box-shadow: 0 4px 0 #a96749, 0 7px 10px rgba(61, 43, 34, .28);
+  cursor: pointer;
+}
+
+.de-aar-shop-button span {
+  font-size: 22px;
+  line-height: 1;
+}
+
+.de-aar-shop-button small {
+  font-size: 9px;
+  font-weight: 900;
+}
+
+.de-aar-shop-button:hover {
+  background: #ffe28a;
+  transform: translateY(-2px);
+}
+
+.de-aar-explore-button {
+  position: absolute;
+  top: 42%;
+  left: 13%;
+  z-index: 7;
+  display: grid;
+  width: 54px;
+  height: 54px;
+  place-items: center;
+  padding: 5px;
+  border: 3px solid #fff3c4;
+  border-radius: 50%;
+  color: #4b3a33;
+  background: #f6d66d;
+  box-shadow: 0 4px 0 #a96749, 0 7px 10px rgba(61, 43, 34, .28);
+  cursor: pointer;
+}
+
+.de-aar-explore-button span {
+  font-size: 23px;
+  line-height: 1;
+}
+
+.de-aar-explore-button small {
+  font-size: 8px;
+  font-weight: 900;
+}
+
+.de-aar-explore-button:hover {
+  background: #ffe28a;
+  transform: translateY(-2px);
+}
+
+.de-aar-explore-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 20;
+  display: grid;
+  place-items: center;
+  background: #000;
+}
+
+.de-aar-explore-video {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.de-aar-explore-close {
+  position: absolute;
+  top: 18px;
+  right: 18px;
+  z-index: 1;
+  padding: 8px 14px;
+  border: 2px solid #fff3c4;
+  border-radius: 12px;
+  color: #4b3a33;
+  background: #f6d66d;
+  cursor: pointer;
+  font-weight: 800;
+}
+
+.de-aar-shop-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9;
+  display: grid;
+  place-items: center;
+  padding: 18px;
+  background: rgba(38, 38, 38, .5);
+}
+
+.de-aar-shop-scroll {
+  width: min(390px, 100%);
+  max-height: calc(100dvh - 36px);
+  overflow-y: auto;
+  padding: 24px 20px;
+  border: 5px solid #c99a50;
+  border-radius: 22px 22px 16px 16px;
+  color: #4b3a33;
+  background: #fff3c4;
+  box-shadow: inset 0 0 0 3px #fbe5a0, 0 8px 0 #8f593d, 0 16px 28px rgba(61, 43, 34, .35);
+}
+
+.de-aar-shop-heading {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  padding-bottom: 12px;
+  border-bottom: 2px solid #d9b66b;
+}
+
+.de-aar-shop-heading p,
+.de-aar-shop-heading h2 {
+  margin: 0;
+}
+
+.de-aar-shop-heading p {
+  color: #9b6e35;
+  font-size: 11px;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.de-aar-shop-heading h2 {
+  margin-top: 3px;
+  font-size: 25px;
+}
+
+.de-aar-shop-heading button {
+  width: 34px;
+  height: 34px;
+  border: 0;
+  border-radius: 50%;
+  color: #4b3a33;
+  background: #e8c879;
+  cursor: pointer;
+  font-size: 18px;
+}
+
+.de-aar-shop-money {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 14px;
+  padding: 10px 12px;
+  border-radius: 9px;
+  background: rgba(255, 250, 224, .8);
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.de-aar-shop-money strong {
+  color: #39734a;
+}
+
+.de-aar-shop-items {
+  display: grid;
+  gap: 9px;
+  margin-top: 14px;
+}
+
+.de-aar-shop-item {
+  display: grid;
+  grid-template-columns: 40px 1fr auto;
+  align-items: center;
+  gap: 9px;
+  min-height: 58px;
+  padding: 8px 10px;
+  border: 2px solid #d6b36a;
+  border-radius: 10px;
+  color: #4b3a33;
+  background: #fffaf0;
+  text-align: left;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.de-aar-shop-item:not(:disabled):hover {
+  background: #ffe28a;
+  transform: translateY(-2px);
+}
+
+.de-aar-shop-item:disabled {
+  cursor: default;
+  opacity: .58;
+}
+
+.de-aar-shop-item strong {
+  color: #9b6e35;
+  font-size: 12px;
+}
+
+.de-aar-shop-item-icon {
+  display: grid;
+  width: 38px;
+  height: 38px;
+  place-items: center;
+  border-radius: 8px;
+  background: #f3dfaa;
+  font-size: 22px;
+}
+
+@media (max-width: 600px) {
+  .de-aar-shop-button {
+    top: 48%;
+    right: 8%;
+  }
+
+  .de-aar-explore-button {
+    top: 42%;
+    left: 8%;
+  }
+}

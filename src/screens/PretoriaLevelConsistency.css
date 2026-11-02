@@ -1,0 +1,172 @@
+.pretoria-game {
+  min-height: 100dvh;
+  overflow-x: hidden;
+  overflow-y: auto;
+  background: #d9edf2;
+  color: #20263f;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+.pretoria-game .hud {
+  height: auto;
+  min-height: 70px;
+  padding: 14px clamp(16px, 5vw, 42px);
+  background: #20263f;
+  border-bottom: 0;
+  box-shadow: 0 6px 18px rgba(24, 35, 62, 0.2);
+}
+
+.pretoria-game .hud-title small,
+.pretoria-game .mission small {
+  color: #b5c4d0;
+}
+
+.pretoria-game .hud-title strong {
+  color: #ffffff;
+  font-size: clamp(16px, 2.2vw, 21px);
+  letter-spacing: 1px;
+}
+
+.pretoria-game .hud-stats {
+  gap: 8px;
+}
+
+.pretoria-game .stat-chip,
+.pretoria-game .bag-chip {
+  border: 0;
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.12);
+  box-shadow: none;
+}
+
+.pretoria-game .stat-chip:hover,
+.pretoria-game .bag-chip:hover {
+  background: rgba(255, 255, 255, 0.2);
+  transform: translateY(-2px);
+}
+
+.pretoria-game .need-bars {
+  top: 84px;
+  right: clamp(16px, 5vw, 42px);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 14px;
+  background: rgba(32, 38, 63, 0.9);
+}
+
+.pretoria-game .mission {
+  top: 96px;
+  left: clamp(16px, 5vw, 42px);
+  border: 0;
+  border-radius: 14px;
+  background: rgba(32, 38, 63, 0.92);
+  box-shadow: 0 8px 20px rgba(20, 30, 49, 0.2);
+}
+
+.pretoria-game .world {
+  min-height: 520px;
+  height: min(62vh, 620px);
+}
+
+.pretoria-game .world-object {
+  border: 0;
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.9);
+  color: #20263f;
+  box-shadow: 0 7px 16px rgba(28, 42, 57, 0.2);
+}
+
+.pretoria-game .world-object:hover,
+.pretoria-game .world-object:focus-visible {
+  background: #fff5cc;
+  box-shadow: 0 10px 22px rgba(28, 42, 57, 0.26);
+  transform: translateY(-4px) scale(1.03);
+}
+
+.pretoria-game .bottom-panel {
+  height: auto;
+  min-height: 190px;
+  padding: 14px clamp(16px, 5vw, 42px) 24px;
+  background: #d9edf2;
+  border-top: 1px solid rgba(32, 38, 63, 0.08);
+}
+
+.pretoria-game .dialogue,
+.pretoria-game .action-row {
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.86);
+  color: #20263f;
+  box-shadow: 0 8px 20px rgba(32, 38, 63, 0.08);
+}
+
+.pretoria-game .dialogue {
+  padding: 10px 14px;
+}
+
+.pretoria-game .words p {
+  color: #303b55;
+}
+
+.pretoria-game .words aside {
+  color: #287072;
+  background: #e1f2ef;
+}
+
+.pretoria-game .action-row {
+  gap: 8px;
+  padding: 8px;
+}
+
+.pretoria-game .action-row > button {
+  border: 0;
+  border-radius: 12px;
+  color: #20263f;
+  background: #eef3f4;
+}
+
+.pretoria-game .action-row > button:hover {
+  background: #dcecef;
+  transform: translateY(-2px);
+}
+
+.pretoria-game .action-row > .primary,
+.pretoria-game .ready-button {
+  color: #ffffff;
+  background: #20263f;
+}
+
+.pretoria-game .overlay {
+  background: rgba(20, 29, 52, 0.72);
+}
+
+.pretoria-game .modal {
+  border: 0;
+  border-radius: 18px;
+  box-shadow: 0 22px 55px rgba(20, 29, 52, 0.28);
+}
+
+@media (max-width: 720px) {
+  .pretoria-game .hud {
+    padding: 11px 12px;
+  }
+
+  .pretoria-game .need-bars {
+    top: 76px;
+    right: 10px;
+  }
+
+  .pretoria-game .mission {
+    top: 86px;
+    left: 10px;
+    right: 10px;
+    max-width: none;
+  }
+
+  .pretoria-game .world {
+    height: auto;
+    min-height: 480px;
+  }
+
+  .pretoria-game .bottom-panel {
+    padding: 10px 10px 20px;
+  }
+}

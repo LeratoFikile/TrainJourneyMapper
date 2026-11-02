@@ -1,0 +1,36 @@
+.auth-legal-links {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  padding: 8px 0 2px;
+  border-top: 1px solid rgba(112, 62, 27, .32);
+  color: #69401f;
+  font-size: clamp(10px, 1.4vw, 12px);
+  font-weight: 800;
+  background: rgba(235, 190, 112, .94);
+}
+
+.auth-legal-links button {
+  padding: 3px 1px;
+  border: 0;
+  color: inherit;
+  background: transparent;
+  cursor: pointer;
+  font: inherit;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.auth-legal-links button:hover,
+.auth-legal-links button:focus-visible {
+  color: #351d0d;
+}
+
+.auth-legal-links button:focus-visible {
+  outline: 2px solid #84501f;
+  outline-offset: 2px;
+}
