@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import scrollBackground from "../assets/miniGame/blank-scroll-nobg.png";
 import matchLogo from "../assets/miniGame/train_match_logo.png";
 import blueTrain from "../assets/miniGame/train-blue.png";
@@ -17,6 +17,7 @@ import tileMatchSound from "../assets/miniGame/tile_match.mp3";
 import "./miniGame.css";
 import { createConfiguredAudio, triggerVibration } from "../settings";
 import { MINI_GAME_REWARD } from "../gameConstants";
+import LifeHearts from "../components/LifeHearts";
 
 const TRAIN_TYPES = [
 	["blue", blueTrain],
@@ -127,21 +128,31 @@ function resolveBoard(board) {
 	return { board: nextBoard, matchCount };
 }
 
-export default function MiniGame({ player, onBack, onPlayerStateChange }) {
+export default function MiniGame({
+	player,
+	onBack,
+	onPlayerStateChange,
+	availableHearts = 3,
+	heartLossTimestamps = player?.heartLossTimestamps || [],
+	onPlayerDeath,
+	onPlayerRespawn,
+}) {
 	const [board, setBoard] = useState(createBoard);
 	const [selected, setSelected] = useState(null);
 	const [matchesMade, setMatchesMade] = useState(0);
 	const [seconds, setSeconds] = useState(GAME_TIME);
-	const [gameState, setGameState] = useState("playing");
+	const [gameState, setGameState] = useState(availableHearts === 0 ? "lost" : "playing");
 	const [rewardClaimed, setRewardClaimed] = useState(false);
 	const [currentNeeds, setCurrentNeeds] = useState(player?.needs || DEFAULT_NEEDS);
+	const currentNeedsRef = useRef(currentNeeds);
+	const deathReported = useRef(false);
+	const wasOutOfHearts = useRef(availableHearts === 0);
 	const [hint, setHint] = useState(null);
 	const money = Number.isFinite(player?.money) ? player.money : 250;
 
 	useEffect(() => {
 		const music = createConfiguredAudio(miniGameMusic, "music");
 		music.loop = true;
-		music.volume = 0.55;
 		music.play().catch(() => undefined);
 
 		return () => {
@@ -160,20 +171,24 @@ export default function MiniGame({ player, onBack, onPlayerStateChange }) {
 		if (gameState !== "playing") return undefined;
 
 		const drainTimer = window.setInterval(() => {
-			setCurrentNeeds((current) => {
-				const nextNeeds = {
-					life: Math.max(0, current.life - 0.2),
-					hunger: Math.max(0, current.hunger - 0.7),
-					water: Math.max(0, current.water - 0.9),
-				};
-				onPlayerStateChange({ needs: nextNeeds });
-				if (Object.values(nextNeeds).some((value) => value <= 0)) setGameState("lost");
-				return nextNeeds;
-			});
+			const current = currentNeedsRef.current;
+			const nextNeeds = {
+				...current,
+				hunger: Math.max(0, current.hunger - 0.7),
+				water: Math.max(0, current.water - 0.9),
+			};
+			currentNeedsRef.current = nextNeeds;
+			setCurrentNeeds(nextNeeds);
+			onPlayerStateChange({ needs: nextNeeds });
+			if ((nextNeeds.hunger <= 0 || nextNeeds.water <= 0) && !deathReported.current) {
+				deathReported.current = true;
+				setGameState("lost");
+				onPlayerDeath?.();
+			}
 		}, 5000);
 
 		return () => window.clearInterval(drainTimer);
-	}, [gameState, onPlayerStateChange]);
+	}, [gameState, onPlayerDeath, onPlayerStateChange]);
 
 	useEffect(() => {
 		if (gameState !== "playing") return undefined;
@@ -249,6 +264,22 @@ export default function MiniGame({ player, onBack, onPlayerStateChange }) {
 	};
 
 	const handleRestart = () => {
+		if (availableHearts === 0) return;
+		if (deathReported.current) {
+			const resetNeeds = {
+				...currentNeedsRef.current,
+				hunger: currentNeedsRef.current.hunger <= 0 ? DEFAULT_NEEDS.hunger : currentNeedsRef.current.hunger,
+				water: currentNeedsRef.current.water <= 0 ? DEFAULT_NEEDS.water : currentNeedsRef.current.water,
+				life: 100,
+			};
+			currentNeedsRef.current = resetNeeds;
+			setCurrentNeeds(resetNeeds);
+			onPlayerRespawn?.(resetNeeds);
+			deathReported.current = false;
+		} else if (wasOutOfHearts.current) {
+			onPlayerRespawn?.();
+		}
+		wasOutOfHearts.current = false;
 		setBoard(createBoard());
 		setSelected(null);
 		setMatchesMade(0);
@@ -277,7 +308,7 @@ export default function MiniGame({ player, onBack, onPlayerStateChange }) {
 					<div className="mini-game-progress">Matches made: <strong>{Math.min(matchesMade, MATCH_TARGET)}/{MATCH_TARGET}</strong></div>
 					{hint && <div className="mini-game-hint" role="status">Try these highlighted trains!</div>}
 					<div className="mini-game-needs" aria-label="Traveller needs while playing">
-						<span title={`Life ${Math.round(currentNeeds.life)}%`}><b aria-hidden="true">&#10084;</b><i><em style={{ width: `${currentNeeds.life}%` }} /></i></span>
+						<LifeHearts lossTimestamps={heartLossTimestamps} />
 						<span title={`Hunger ${Math.round(currentNeeds.hunger)}%`}><b aria-hidden="true">&#127830;</b><i><em style={{ width: `${currentNeeds.hunger}%` }} /></i></span>
 						<span title={`Thirst ${Math.round(currentNeeds.water)}%`}><b aria-hidden="true">&#128167;</b><i><em style={{ width: `${currentNeeds.water}%` }} /></i></span>
 					</div>
@@ -301,9 +332,15 @@ export default function MiniGame({ player, onBack, onPlayerStateChange }) {
 				</div>
 				{gameState !== "playing" && (
 					<div className="mini-game-result" role="dialog" aria-modal="true">
-						<h2>{gameState === "won" ? "You did it!" : "Journey needs are empty!"}</h2>
-						<p>{gameState === "won" ? `You earned R${REWARD}.` : "Your traveller needs a break. Try again!"}</p>
-						<button type="button" onClick={handleRestart}>{gameState === "won" ? "Play again" : "Try again"}</button>
+						<h2>{gameState === "won" ? "You did it!" : availableHearts === 0 ? "All hearts lost." : "Journey needs are empty!"}</h2>
+						<p>{gameState === "won" ? `You earned R${REWARD}.` : availableHearts === 0 ? "Wait for a heart to regenerate before continuing." : "Your traveller needs a break. Try again!"}</p>
+						<button
+							type="button"
+							onClick={handleRestart}
+							disabled={availableHearts === 0}
+						>
+							{gameState === "won" ? "Play again" : availableHearts === 0 ? "Wait for a heart" : "Try again"}
+						</button>
 					</div>
 				)}
 			</div>

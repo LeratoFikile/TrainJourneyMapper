@@ -6,6 +6,7 @@ import savannaGround from "../assets/elements/savanna_ground.png";
 import acaciaTree from "../assets/elements/acacia_tree.png";
 import smallClouds from "../assets/elements/small_clouds.png";
 import starBadge from "../assets/elements/star_badge.png";
+import GameActionDialog from "../components/GameActionDialog";
 import trainJourneyLogo from "../assets/elements/title_train_journey_logo.png";
 import welcomeMapper from "../assets/elements/title_welcome_mapper.png";
 import lock1 from "../assets/elements/lock_1.png";
@@ -89,8 +90,11 @@ export default function JourneyMap({
   onOpenLevel,
   onOpenInfo,
   onOpenMiniGames,
+  onResetProgress,
+  backLabel = "HOME",
 }) {
   const [showPassport, setShowPassport] = useState(false);
+  const [showResetConfirmation, setShowResetConfirmation] = useState(false);
   const completedLevels = player?.completedLevels || [];
   return (
     <main className="journey-map-screen">
@@ -103,8 +107,8 @@ export default function JourneyMap({
       <img className="journey-map-tree journey-map-tree--three" src={acaciaTree} alt="" aria-hidden="true" />
 
       <header className="journey-map-header">
-        <button type="button" className="journey-map-back" onClick={onBack} aria-label="Back to home">
-          <span aria-hidden="true">←</span><small>HOME</small>
+        <button type="button" className="journey-map-back" onClick={onBack} aria-label="Return to previous screen">
+          <span aria-hidden="true">←</span><small>{backLabel}</small>
         </button>
         <div className="journey-map-title">
           <img className="journey-map-logo" src={trainJourneyLogo} alt="Train Journey" />
@@ -141,6 +145,17 @@ export default function JourneyMap({
               <circle cx="39" cy="20" r="1.8" />
             </svg>
             <span>Games</span>
+          </button>
+          <button
+            type="button"
+            className="journey-map-action journey-map-reset"
+            onClick={() => setShowResetConfirmation(true)}
+            aria-label="Reset game progress"
+            title="Reset game progress"
+          >
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M20 7v5h-5M4.9 9a7 7 0 0 1 11.6-2L20 12M4 17v-5h5m10.1 3a7 7 0 0 1-11.6 2L4 12" />
+            </svg>
           </button>
         </div>
       </header>
@@ -188,6 +203,13 @@ export default function JourneyMap({
 
       {showPassport && (
         <PassportModal player={player} onClose={() => setShowPassport(false)} />
+      )}
+      {showResetConfirmation && (
+        <GameActionDialog
+          action="reset"
+          onCancel={() => setShowResetConfirmation(false)}
+          onConfirm={onResetProgress}
+        />
       )}
     </main>
   );

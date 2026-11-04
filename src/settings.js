@@ -1,3 +1,5 @@
+import { auth } from "./firebase";
+
 export const DEFAULT_SETTINGS = {
   musicVolume: 0.73,
   effectsVolume: 0.82,
@@ -8,8 +10,14 @@ export const DEFAULT_SETTINGS = {
 
 const SETTINGS_STORAGE_KEY = "trainJourneySettings";
 
+function getSettingsStorageKey() {
+  const user = auth.currentUser;
+  return user ? `${SETTINGS_STORAGE_KEY}:${user.uid}` : null;
+}
+
 export function loadSettings() {
-  const savedSettings = localStorage.getItem(SETTINGS_STORAGE_KEY);
+  const storageKey = getSettingsStorageKey();
+  const savedSettings = storageKey ? localStorage.getItem(storageKey) : null;
   if (!savedSettings) return { ...DEFAULT_SETTINGS };
 
   const parsedSettings = JSON.parse(savedSettings);
@@ -22,7 +30,7 @@ export function loadSettings() {
     vibration: typeof parsedSettings.vibration === "boolean"
       ? parsedSettings.vibration
       : DEFAULT_SETTINGS.vibration,
-    language: parsedSettings.language === "Setswana" ? "Setswana" : "English",
+    language: "English",
   };
 }
 
@@ -33,17 +41,26 @@ function clampVolume(value, fallback) {
 }
 
 export function saveSettings(settings) {
+  const storageKey = getSettingsStorageKey();
+  if (!storageKey) {
+    throw new Error("Player settings cannot be saved without an authenticated player.");
+  }
+
   const safeSettings = {
     musicVolume: clampVolume(settings.musicVolume, DEFAULT_SETTINGS.musicVolume),
     effectsVolume: clampVolume(settings.effectsVolume, DEFAULT_SETTINGS.effectsVolume),
     notifications: Boolean(settings.notifications),
     vibration: Boolean(settings.vibration),
-    language: settings.language === "Setswana" ? "Setswana" : "English",
+    language: "English",
   };
 
-  localStorage.setItem(SETTINGS_STORAGE_KEY, JSON.stringify(safeSettings));
-  window.dispatchEvent(new CustomEvent("train-journey-settings-changed", { detail: safeSettings }));
+  localStorage.setItem(storageKey, JSON.stringify(safeSettings));
+  notifySettingsChanged(safeSettings);
   return safeSettings;
+}
+
+export function notifySettingsChanged(settings) {
+  window.dispatchEvent(new CustomEvent("train-journey-settings-changed", { detail: settings }));
 }
 
 export function createConfiguredAudio(source, category = "effects") {

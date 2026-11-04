@@ -17,6 +17,7 @@ import drinkingWaterSound from "../assets/sounds/drinking_water.mp3";
 import eatingSound from "../assets/sounds/eating.mp3";
 import purchaseSound from "../assets/sounds/purchase_sound.mp3";
 import { createConfiguredAudio, triggerVibration } from "../settings";
+import LifeHearts from "../components/LifeHearts";
 import "./KimberleyLevel.css";
 
 const SKINS = { skin_01: skin1, skin_02: skin2, skin_03: skin3, skin_04: skin4, skin_05: skin5, skin_06: skin6 };
@@ -33,7 +34,20 @@ const SHOP_ITEMS = [
 	{ id: "water", label: "Water bottle", icon: "\uD83D\uDCA7", price: 30 },
 ];
 
-export default function KimberleyLevel({ player, needs, acquiredItems = [], onBack, onPlayerStateChange, onTrainDepartureComplete, onOpenMiniGame }) {
+export default function KimberleyLevel({
+	player,
+	needs,
+	acquiredItems = [],
+	onBack,
+	onPlayerStateChange,
+	onTrainDepartureComplete,
+	onOpenMiniGame,
+	onOpenInventoryMap,
+	availableHearts = 3,
+	heartLossTimestamps = player?.heartLossTimestamps || [],
+	onPlayerDeath,
+	onPlayerRespawn,
+}) {
 	const [isCollectionOpen, setIsCollectionOpen] = useState(false);
 	const [isShopOpen, setIsShopOpen] = useState(false);
 	const [currentNeeds, setCurrentNeeds] = useState(needs || player?.needs || { life: 100, hunger: 86, water: 92 });
@@ -69,9 +83,14 @@ export default function KimberleyLevel({ player, needs, acquiredItems = [], onBa
 	const countdownLabel = countdownSeconds === null
 		? ""
 		: `${String(Math.floor(countdownSeconds / 60)).padStart(2, "0")}:${String(countdownSeconds % 60).padStart(2, "0")}`;
-	const isGameOver = countdownSeconds === 0;
+	const isResourceDeath = currentNeeds.hunger <= 0 || currentNeeds.water <= 0;
+	const isGameOver = availableHearts === 0 || countdownSeconds === 0 || isResourceDeath;
 	const hasTicket = collectedItems.includes("ticket");
 	const canBoardTrain = hasTicket && (countdownSeconds === null || countdownSeconds > 0);
+
+	useEffect(() => {
+		if (isResourceDeath) onPlayerDeath?.();
+	}, [isResourceDeath, onPlayerDeath]);
 
 	const handleConsumeItem = (item) => {
 		if (item.id !== "water" && item.id !== "sandwich") return;
@@ -128,6 +147,15 @@ export default function KimberleyLevel({ player, needs, acquiredItems = [], onBa
 	};
 
 	const handleStartOver = () => {
+		if (availableHearts === 0) return;
+		const resetNeeds = {
+			...currentNeeds,
+			hunger: currentNeeds.hunger <= 0 ? 86 : currentNeeds.hunger,
+			water: currentNeeds.water <= 0 ? 92 : currentNeeds.water,
+			life: 100,
+		};
+		setCurrentNeeds(resetNeeds);
+		onPlayerRespawn?.(resetNeeds);
 		setCountdownSeconds(null);
 	};
 
@@ -166,10 +194,7 @@ export default function KimberleyLevel({ player, needs, acquiredItems = [], onBa
 				</div>
 			)}
 			<div className="kimberley-needs" aria-label="Traveller status">
-				<div className="kimberley-need-meter kimberley-need-life" title={`Life ${Math.round(currentNeeds.life)}%`}>
-					<span aria-hidden="true">&#10084;</span>
-					<div className="kimberley-need-track"><i style={{ width: `${currentNeeds.life}%` }} /></div>
-				</div>
+				<LifeHearts lossTimestamps={heartLossTimestamps} />
 				<div className="kimberley-need-meter kimberley-need-hunger" title={`Hunger ${Math.round(currentNeeds.hunger)}%`}>
 					<span aria-hidden="true">&#127830;</span>
 					<div className="kimberley-need-track"><i style={{ width: `${currentNeeds.hunger}%` }} /></div>
@@ -248,9 +273,18 @@ export default function KimberleyLevel({ player, needs, acquiredItems = [], onBa
 								const [label, icon] = ITEM_LABELS[itemId] || [itemId, "\uD83D\uDCE6"];
 								const item = { id: itemId };
 								const isConsumable = itemId === "water" || itemId === "sandwich";
+								const isMap = itemId === "map";
 								return (
 									<div className="kimberley-collection-item" key={`${itemId}-${index}`}>
 										<span>{icon} {label}</span>
+										{isMap && onOpenInventoryMap && (
+											<button
+												type="button"
+												onClick={onOpenInventoryMap}
+											>
+												Open map
+											</button>
+										)}
 										{isConsumable && (
 											<button type="button" onClick={() => handleConsumeItem(item)}>
 												{itemId === "water" ? "Drink" : "Eat"}
@@ -305,15 +339,16 @@ export default function KimberleyLevel({ player, needs, acquiredItems = [], onBa
 						src={activeVideo === "train" ? kimberleyTrainLeavingVideo : kimberleyExploreVideo}
 						autoPlay
 						playsInline
+						preload="auto"
 						onEnded={activeVideo === "train" ? onTrainDepartureComplete : undefined}
 					/>
 				</div>
 			)}
 			{isGameOver && (
 				<div className="kimberley-game-over" role="dialog" aria-label="Traveller has died">
-					<p>Time's up</p>
+					<p>{availableHearts === 0 ? "All hearts lost. Wait for a heart to regenerate." : countdownSeconds === 0 ? "Time's up" : "You died"}</p>
 					<div className="kimberley-game-over-actions">
-						<button type="button" aria-label="Start over" title="Start over" onClick={handleStartOver}>
+						<button type="button" aria-label="Start over" title={availableHearts === 0 ? "Wait for a heart to regenerate" : "Start over"} onClick={handleStartOver} disabled={availableHearts === 0}>
 							<span aria-hidden="true">&#8635;</span>
 						</button>
 						<button type="button" aria-label="Back to levels" title="Back to levels" onClick={onBack}>

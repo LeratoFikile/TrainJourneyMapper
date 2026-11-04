@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import pretoriaLevelImage from "../assets/elements/pretoria_level.png";
 import "./PretoriaLevel.css";
 import guideMamzo from "../assets/characters/guides/mamzo.png";
@@ -16,6 +16,7 @@ import drinkingWaterSound from "../assets/sounds/drinking_water.mp3";
 import eatingSound from "../assets/sounds/eating.mp3";
 import purchaseSound from "../assets/sounds/purchase_sound.mp3";
 import { createConfiguredAudio, notificationsEnabled, triggerVibration } from "../settings";
+import LifeHearts from "../components/LifeHearts";
 
 const SKINS = { skin_01: skin1, skin_02: skin2, skin_03: skin3, skin_04: skin4, skin_05: skin5, skin_06: skin6 };
 const DEFAULT_NEEDS = { life: 100, hunger: 86, water: 92 };
@@ -60,12 +61,16 @@ export default function PretoriaLevel({
   onBoardTrain,
   onPlayerStateChange,
   onOpenMiniGame,
+  onOpenInventoryMap,
+  availableHearts = 3,
+  heartLossTimestamps = player?.heartLossTimestamps || [],
+  onPlayerDeath,
+  onPlayerRespawn,
   location = "Pretoria",
   levelImage = pretoriaLevelImage,
   exploreVideoSource,
   deAarMode = false,
 }) {
-  const startingNeeds = useRef(player?.needs || DEFAULT_NEEDS);
   const [needs, setNeeds] = useState(player?.needs || DEFAULT_NEEDS);
   const [speechStep, setSpeechStep] = useState(0);
   const [countdownSeconds, setCountdownSeconds] = useState(null);
@@ -98,7 +103,7 @@ export default function PretoriaLevel({
     const timer = window.setInterval(() => {
       setNeeds((current) => {
         const nextNeeds = {
-          life: Math.max(0, current.life - 0.2),
+          life: current.life,
           hunger: Math.max(0, current.hunger - 0.7),
           water: Math.max(0, current.water - 0.9),
         };
@@ -133,14 +138,28 @@ export default function PretoriaLevel({
   const countdownLabel = countdownSeconds === null
     ? ""
     : `${String(Math.floor(countdownSeconds / 60)).padStart(2, "0")}:${String(countdownSeconds % 60).padStart(2, "0")}`;
-  const isGameOver = countdownSeconds === 0 || Object.values(needs).some((value) => value <= 0);
+  const isResourceDeath = needs.hunger <= 0 || needs.water <= 0;
+  const isGameOver = availableHearts === 0 || countdownSeconds === 0 || isResourceDeath;
   const hasTicket = collectedItems.includes("ticket");
   const canExplore = Boolean(exploreVideoSource) && countdownSeconds !== null && countdownSeconds > 0;
 
+  useEffect(() => {
+    if (isResourceDeath) onPlayerDeath?.();
+  }, [isResourceDeath, onPlayerDeath]);
+
   const handleStartOver = () => {
+    if (availableHearts === 0) return;
+
+    const resetNeeds = {
+      ...needs,
+      hunger: needs.hunger <= 0 ? DEFAULT_NEEDS.hunger : needs.hunger,
+      water: needs.water <= 0 ? DEFAULT_NEEDS.water : needs.water,
+      life: 100,
+    };
+    setNeeds(resetNeeds);
+    onPlayerRespawn?.(resetNeeds);
+
     if (deAarMode) {
-      setNeeds(startingNeeds.current);
-      onPlayerStateChange({ needs: startingNeeds.current });
       setSpeechStep(2);
       setCountdownSeconds(60);
       setPickupMessage("");
@@ -220,10 +239,7 @@ export default function PretoriaLevel({
         <span aria-hidden="true">&#8592;</span> Levels
       </button>
       <div className="pretoria-needs" aria-label="Traveller status">
-        <div className="need-meter need-life" title={`Life ${Math.round(needs.life)}%`}>
-          <span aria-hidden="true">&#10084;</span>
-          <div className="need-track"><i style={{ width: `${needs.life}%` }} /></div>
-        </div>
+        <LifeHearts lossTimestamps={heartLossTimestamps} />
         <div className="need-meter need-hunger" title={`Hunger ${Math.round(needs.hunger)}%`}>
           <span aria-hidden="true">&#127830;</span>
           <div className="need-track"><i style={{ width: `${needs.hunger}%` }} /></div>
@@ -337,10 +353,19 @@ export default function PretoriaLevel({
                 const item = INVENTORY_ITEMS.find((inventoryItem) => inventoryItem.id === itemId);
                 if (!item) return null;
                 const isConsumable = item.id === "water" || item.id === "sandwich";
+                const isMap = item.id === "map";
                 return (
                   <div className="collection-item" key={item.id}>
                     <span className="inventory-item-icon" aria-hidden="true">{item.icon}</span>
                     <span>{item.label}</span>
+                    {isMap && onOpenInventoryMap && (
+                      <button
+                        type="button"
+                        onClick={onOpenInventoryMap}
+                      >
+                        Open map
+                      </button>
+                    )}
                     {isConsumable && (
                       <button type="button" onClick={() => handleConsumeItem(item)}>
                         {item.id === "water" ? "Drink" : "Eat"}
@@ -395,6 +420,7 @@ export default function PretoriaLevel({
             src={exploreVideoSource}
             autoPlay
             playsInline
+            preload="auto"
             onEnded={() => setIsExploreOpen(false)}
           />
           <button
@@ -428,9 +454,9 @@ export default function PretoriaLevel({
       )}
       {isGameOver && (
         <div className="pretoria-game-over" role="dialog" aria-label="Traveller has died">
-          <p>{countdownSeconds === 0 ? "Time's up" : "You died"}</p>
+          <p>{availableHearts === 0 ? "All hearts lost. Wait for a heart to regenerate." : countdownSeconds === 0 ? "Time's up" : "You died"}</p>
           <div className="pretoria-game-over-actions">
-            <button type="button" aria-label="Start over" title="Start over" onClick={handleStartOver}>
+            <button type="button" aria-label="Start over" title={availableHearts === 0 ? "Wait for a heart to regenerate" : "Start over"} onClick={handleStartOver} disabled={availableHearts === 0}>
               <span aria-hidden="true">&#8635;</span>
             </button>
             <button type="button" aria-label="Back to levels" title="Back to levels" onClick={onBack}>

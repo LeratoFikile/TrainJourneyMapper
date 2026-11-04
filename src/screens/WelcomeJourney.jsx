@@ -85,8 +85,9 @@ export default function WelcomeJourney({ player, onComplete }) {
                 <section className="welcome-guide-section">
                   <h2>⚡ Keep Your Energy Up!</h2>
                   <p>
-                    Travelling and exploring uses energy. Keep checking your energy levels so
-                    you're ready for the next adventure.
+                    Travelling and exploring uses energy and your hearts are your lives. If your
+                    food or water runs out, you will lose a heart and need to recover before continuing.
+                    Keep an eye on your hearts and supplies.
                   </p>
                 </section>
                 <section className="welcome-guide-section">

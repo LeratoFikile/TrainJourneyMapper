@@ -90,7 +90,7 @@
 .pretoria-game-over {
   position: absolute;
   inset: 0;
-  z-index: 10;
+  z-index: 30;
   display: grid;
   place-content: center;
   justify-items: center;
@@ -133,6 +133,11 @@
   transform: translateY(-2px);
 }
 
+.pretoria-game-over-actions button:disabled {
+  cursor: not-allowed;
+  opacity: .55;
+}
+
 .need-meter {
   display: flex;
   align-items: center;
@@ -159,7 +164,6 @@
   transition: width .4s ease;
 }
 
-.need-life .need-track i { background: #ef6b72; }
 .need-hunger .need-track i { background: #efad57; }
 .need-water .need-track i { background: #69bce4; }
 

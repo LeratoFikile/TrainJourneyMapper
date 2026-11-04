@@ -80,15 +80,16 @@
 	margin-top: 8px;
 }
 
-.mini-game-needs span {
+.mini-game-needs > span {
 	display: flex;
 	align-items: center;
 	gap: 4px;
 }
 
-.mini-game-needs b { font-size: 14px; }
-.mini-game-needs span:nth-child(2) b { color: #d8893e; }
-.mini-game-needs span:nth-child(3) b { color: #4ba3c6; }
+.mini-game-needs .life-hearts { flex-direction: row; align-items: center; }
+.mini-game-needs > span b { font-size: 14px; }
+.mini-game-needs > span:nth-child(2) b { color: #d8893e; }
+.mini-game-needs > span:nth-child(3) b { color: #4ba3c6; }
 .mini-game-needs i {
 	display: block;
 	width: 45px;
@@ -98,9 +99,8 @@
 	border-radius: 6px;
 	background: rgba(75, 58, 51, .35);
 }
-.mini-game-needs em { display: block; height: 100%; background: #ef6b72; }
-.mini-game-needs span:nth-child(2) em { background: #efad57; }
-.mini-game-needs span:nth-child(3) em { background: #69bce4; }
+.mini-game-needs em { display: block; height: 100%; background: #efad57; }
+.mini-game-needs > span:nth-child(3) em { background: #69bce4; }
 
 .mini-game-board {
 	display: grid;

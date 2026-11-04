@@ -20,7 +20,7 @@ import beaufortWestTrainMovingVideo from "../assets/Beaufort West/Beaufort_West_
 import worcesterTrainInsideOneImage from "../assets/Worcester/train_inside_1.webp";
 import worcesterTrainInsideTwoImage from "../assets/Worcester/Worcester_train_insife_2.png";
 import worcesterTrainInsideVideo from "../assets/Worcester/trains_inside.mp4";
-import worcesterTrainMovingVideo from "../assets/Worcester/worcester_train_leaving.mp4";
+import worcesterTrainCompletionVideo from "../assets/TrainCompletion/worcester_train_leaving.mp4";
 import worcesterScroll00 from "../assets/Worcester/0_title.png";
 import worcesterScroll01 from "../assets/Worcester/1_worcester.png";
 import worcesterScroll02 from "../assets/Worcester/2_breede_river_valley.png";
@@ -30,11 +30,11 @@ import worcesterScroll05 from "../assets/Worcester/5_afrikaans_language_monument
 import worcesterScroll06 from "../assets/Worcester/6_wellington.png";
 import wellingtonTrainInsideOneImage from "../assets/Wellington/wellington_train_inside_1.webp";
 import wellingtonTrainInsideTwoImage from "../assets/Wellington/wellington_train_inside_2.webp";
-import wellingtonTrainMovingVideo from "../assets/Wellington/wellington_train_moving.mp4";
+import wellingtonTrainCompletionVideo from "../assets/TrainCompletion/wellington_train_moving.mp4";
 import bellvilleTrainInsideOneImage from "../assets/Bellville/Bellville_train_inside_1.webp";
 import bellvilleTrainInsideTwoImage from "../assets/Bellville/Bellville_train_inside_2.webp";
 import bellvilleTrainInsideVideo from "../assets/Bellville/Bellvile_train_inside.mp4";
-import bellvilleTrainMovingVideo from "../assets/Bellville/Bellville_train_moving.mp4";
+import bellvilleTrainCompletionVideo from "../assets/TrainCompletion/Bellville_train_moving.mp4";
 import bellvilleScroll00 from "../assets/Bellville/00_bellville_to_cape_town_overview.png";
 import bellvilleScroll01 from "../assets/Bellville/01_bellville.png";
 import bellvilleScroll02 from "../assets/Bellville/02_goodwood.png";
@@ -89,6 +89,7 @@ import trainStopSound from "../assets/sounds/train_stop.mp3";
 import "./TrainInside.css";
 import { createConfiguredAudio, triggerVibration } from "../settings";
 import JourneyKnowledgeQuiz from "./JourneyKnowledgeQuiz";
+import LifeHearts from "../components/LifeHearts";
 
 const PLAYER_SKINS = {
   skin_01: skin1,
@@ -205,7 +206,21 @@ const PHONE_CALL_MESSAGES = {
   ],
 };
 
-export default function TrainInside({ player, needs, acquiredItems = [], onBack, onPlayerStateChange, onKnowledgeQuizComplete, onComplete, scene = "pretoria" }) {
+export default function TrainInside({
+  player,
+  needs,
+  acquiredItems = [],
+  onBack,
+  onPlayerStateChange,
+  onKnowledgeQuizComplete,
+  onComplete,
+  onOpenInventoryMap,
+  scene = "pretoria",
+  availableHearts = 3,
+  heartLossTimestamps = player?.heartLossTimestamps || [],
+  onPlayerDeath,
+  onPlayerRespawn,
+}) {
   const [currentNeeds, setCurrentNeeds] = useState(needs || { life: 100, hunger: 86, water: 92 });
   const traveller = PLAYER_SKINS[player?.skin] || skin1;
   const isDeAar = scene === "de-aar";
@@ -236,14 +251,15 @@ export default function TrainInside({ player, needs, acquiredItems = [], onBack,
       : isWorcester ? worcesterTrainInsideVideo
       : isBeaufortWest ? beaufortWestInsideVideo
       : isDeAar ? deAarTrainInsideVideo : trainTalksVideo;
-  const stopTrainMovingVideo = isBellville ? bellvilleTrainMovingVideo
-    : isWellington ? wellingtonTrainMovingVideo
-    : isWorcester ? worcesterTrainMovingVideo
+  const levelCompletionVideo = isBellville ? bellvilleTrainCompletionVideo
+    : isWellington ? wellingtonTrainCompletionVideo
+    : isWorcester ? worcesterTrainCompletionVideo
       : isBeaufortWest ? beaufortWestTrainMovingVideo : deAarTrainMovingVideo;
   const secondInteriorImage = isBellville ? bellvilleTrainInsideTwoImage
     : isWellington ? wellingtonTrainInsideTwoImage
     : isWorcester ? worcesterTrainInsideTwoImage
       : isBeaufortWest ? beaufortWestTrainInsideTwoImage : deAarTrainInsideTwoImage;
+  const finalInteriorIndex = isWellington ? 2 : 1;
   const guide = player?.guide === "mamzo" ? guideMamzoHalf : guideMalumeHalf;
   const phoneCallMessage = PHONE_CALL_MESSAGES[scene] || PHONE_CALL_MESSAGES.pretoria;
   const phoneSoundRef = useRef(null);
@@ -259,7 +275,15 @@ export default function TrainInside({ player, needs, acquiredItems = [], onBack,
   const [isLevelComplete, setIsLevelComplete] = useState(false);
   const [isQuizOpen, setIsQuizOpen] = useState(false);
   const [deAarInsideIndex, setDeAarInsideIndex] = useState(0);
-  const [deAarMoving, setDeAarMoving] = useState(false);
+  const deathReported = useRef(false);
+  const isResourceDeath = currentNeeds.hunger <= 0 || currentNeeds.water <= 0;
+  const isDeathFlowActive = isResourceDeath || availableHearts === 0;
+
+  useEffect(() => {
+    if (!isResourceDeath || deathReported.current) return;
+    deathReported.current = true;
+    onPlayerDeath?.();
+  }, [isResourceDeath, onPlayerDeath]);
 
   const stopTrainTalksSound = () => {
     const sound = trainTalksSoundRef.current;
@@ -309,6 +333,12 @@ export default function TrainInside({ player, needs, acquiredItems = [], onBack,
 
   const handleGuideMessageOk = () => {
     setGuideMessageVisible(false);
+    if (isWellington) {
+      setTrainTalksFinished(true);
+      setDeAarInsideIndex(1);
+      return;
+    }
+
     setTrainTalksFinished(false);
     setTrainTalksPlaying(true);
   };
@@ -324,27 +354,17 @@ export default function TrainInside({ player, needs, acquiredItems = [], onBack,
     stopTrainTalksSound();
     setTrainTalksPlaying(false);
     setTrainTalksFinished(true);
-  };
-
-  const handleDeAarNext = () => {
-    setDeAarMoving(true);
-  };
-
-  const handleDeAarMovingEnded = () => {
-    setDeAarInsideIndex(1);
-    setDeAarMoving(false);
-    if (isDeAar || isBeaufortWest) {
-      setCurrentScroll(0);
-      setIsScrollOpen(true);
-    }
+    if (hasStopInteriorSequence) setDeAarInsideIndex(1);
   };
 
   const handleOpenDeAarScrolls = () => {
+    if (isDeathFlowActive) return;
     setCurrentScroll(0);
     setIsScrollOpen(true);
   };
 
   const handleNextScroll = () => {
+    if (isDeathFlowActive) return;
     if (currentScroll >= journeyScrolls.length - 1) return;
 
     const nextNeeds = {
@@ -359,6 +379,7 @@ export default function TrainInside({ player, needs, acquiredItems = [], onBack,
   };
 
   const startLevelCompletion = () => {
+    if (isDeathFlowActive) return;
     setIsQuizOpen(false);
     setIsLevelComplete(true);
     const sound = createConfiguredAudio(trainStopSound);
@@ -368,6 +389,7 @@ export default function TrainInside({ player, needs, acquiredItems = [], onBack,
   };
 
   const handleScrollComplete = () => {
+    if (isDeathFlowActive) return;
     setIsScrollOpen(false);
     const completedQuizzes = player?.completedKnowledgeQuizzes || [];
     if (!completedQuizzes.includes(scene)) {
@@ -379,11 +401,13 @@ export default function TrainInside({ player, needs, acquiredItems = [], onBack,
   };
 
   const handleCompletionVideoEnded = () => {
+    if (isDeathFlowActive) return;
     stopTrainStopSound();
     onComplete({ needs: currentNeeds, scene });
   };
 
   const handleConsumeItem = (itemId) => {
+    if (isDeathFlowActive) return;
     if (itemId !== "water" && itemId !== "sandwich") return;
 
     const nextNeeds = {
@@ -402,15 +426,43 @@ export default function TrainInside({ player, needs, acquiredItems = [], onBack,
     sound.play().catch(() => undefined);
   };
 
+  const handleRespawn = () => {
+    if (availableHearts === 0) return;
+    const resetNeeds = {
+      ...currentNeeds,
+      hunger: currentNeeds.hunger <= 0 ? 86 : currentNeeds.hunger,
+      water: currentNeeds.water <= 0 ? 92 : currentNeeds.water,
+      life: 100,
+    };
+    deathReported.current = false;
+    setCurrentNeeds(resetNeeds);
+    onPlayerRespawn?.(resetNeeds);
+  };
+
   return (
     <main className="train-inside" aria-label="Inside the train">
-      {isLevelComplete ? (
+      {isDeathFlowActive ? (
+        <div className="train-completion-overlay train-death-overlay" role="dialog" aria-label="Traveller has died" aria-modal="true">
+          <div className="train-completion-card">
+            <LifeHearts lossTimestamps={heartLossTimestamps} />
+            <h1>{availableHearts === 0 ? "All hearts lost" : "You died"}</h1>
+            <p>{availableHearts === 0 ? "Wait for a heart to regenerate before continuing your journey." : "Your food or water ran out. Restore your needs and continue."}</p>
+            <div className="train-death-actions">
+              <button type="button" onClick={handleRespawn} disabled={availableHearts === 0}>
+                Start over
+              </button>
+              <button type="button" onClick={onBack}>Back to levels</button>
+            </div>
+          </div>
+        </div>
+      ) : isLevelComplete ? (
         <>
           <video
             className="train-leaving-video"
-            src={hasStopInteriorSequence ? stopTrainMovingVideo : leavingPretoriaTrainVideo}
+            src={hasStopInteriorSequence ? levelCompletionVideo : leavingPretoriaTrainVideo}
             autoPlay
             playsInline
+            preload="auto"
             onEnded={handleCompletionVideoEnded}
           />
           <div className="train-completion-overlay" role="status" aria-live="polite">
@@ -437,20 +489,13 @@ export default function TrainInside({ player, needs, acquiredItems = [], onBack,
             </div>
           </div>
         </>
-      ) : deAarMoving ? (
-        <video
-          className="train-leaving-video"
-          src={stopTrainMovingVideo}
-          autoPlay
-          playsInline
-          onEnded={handleDeAarMovingEnded}
-        />
       ) : trainTalksPlaying ? (
         <video
           className="train-talks-video"
           src={trainTalksVideoSource}
           autoPlay
           playsInline
+          preload="auto"
           onPlay={handleTrainTalksPlay}
           onEnded={handleTrainTalksEnded}
         />
@@ -458,17 +503,25 @@ export default function TrainInside({ player, needs, acquiredItems = [], onBack,
         <div className="de-aar-train-interior">
           <img
             className="train-scene-image"
-            src={deAarInsideIndex === 0 ? insideTrainImage : secondInteriorImage}
+            src={isWellington && deAarInsideIndex === 1
+              ? beaufortWestTrainInsideTwoImage
+              : deAarInsideIndex === 0 ? insideTrainImage : secondInteriorImage}
             alt={`Inside the train, view ${deAarInsideIndex + 1}`}
           />
           <img className="train-inside-traveller" src={traveller} alt={player?.name || "Traveller"} />
           <img className="train-inside-guide" src={guide} alt="Tour guide" />
-          {deAarInsideIndex === 0 && (
-            <button className="de-aar-train-next" type="button" onClick={handleDeAarNext}>
+          {deAarInsideIndex < finalInteriorIndex && (
+            <button
+              className="de-aar-train-next"
+              type="button"
+              onClick={() => {
+                if (!isDeathFlowActive) setDeAarInsideIndex((index) => index + 1);
+              }}
+            >
               NEXT
             </button>
           )}
-          {deAarInsideIndex === 1 && !isScrollOpen && hasJourneyScrolls && (
+          {deAarInsideIndex === finalInteriorIndex && !isScrollOpen && hasJourneyScrolls && (
             <button className="de-aar-train-next" type="button" onClick={handleOpenDeAarScrolls}>
               NEXT
             </button>
@@ -495,7 +548,7 @@ export default function TrainInside({ player, needs, acquiredItems = [], onBack,
           )}
         </>
       )}
-      {!isLevelComplete && !deAarMoving && !trainTalksPlaying && !phoneAnswered && (
+      {!isLevelComplete && !isDeathFlowActive && !trainTalksPlaying && !phoneAnswered && (
         <button
           className="train-inside-phone"
           type="button"
@@ -506,7 +559,7 @@ export default function TrainInside({ player, needs, acquiredItems = [], onBack,
           <span>Answer the phone</span>
         </button>
       )}
-      {!isLevelComplete && !deAarMoving && !trainTalksPlaying && phoneAnswered && guideMessageVisible && (
+      {!isLevelComplete && !isDeathFlowActive && !trainTalksPlaying && phoneAnswered && guideMessageVisible && (
         <>
           <img className="train-inside-guide" src={guide} alt="Tour guide" />
           <div className="train-inside-guide-dialog">
@@ -527,16 +580,13 @@ export default function TrainInside({ player, needs, acquiredItems = [], onBack,
           </div>
         </>
       )}
-      {!isLevelComplete && !deAarMoving && (
+      {!isLevelComplete && (
         <>
           <button className="train-inside-back-button" onClick={onBack} type="button">
             <span aria-hidden="true">&#8592;</span> Levels
           </button>
           <div className="train-inside-needs" aria-label="Traveller status">
-            <div className="need-meter need-life" title={`Life ${Math.round(currentNeeds.life)}%`}>
-              <span aria-hidden="true">&#10084;</span>
-              <div className="need-track"><i style={{ width: `${currentNeeds.life}%` }} /></div>
-            </div>
+            <LifeHearts lossTimestamps={heartLossTimestamps} />
             <div className="need-meter need-hunger" title={`Hunger ${Math.round(currentNeeds.hunger)}%`}>
               <span aria-hidden="true">&#127830;</span>
               <div className="need-track"><i style={{ width: `${currentNeeds.hunger}%` }} /></div>
@@ -557,7 +607,7 @@ export default function TrainInside({ player, needs, acquiredItems = [], onBack,
           </button>
         </>
       )}
-      {!isLevelComplete && !deAarMoving && isCollectionOpen && (
+      {!isLevelComplete && !isDeathFlowActive && isCollectionOpen && (
         <div className="train-inside-collection" role="dialog" aria-label="Collection" aria-modal="true">
           <div className="train-inside-collection-heading">
             <h2>Collection</h2>
@@ -572,9 +622,18 @@ export default function TrainInside({ player, needs, acquiredItems = [], onBack,
               {acquiredItems.map((itemId) => {
                 const [label, icon] = ITEM_LABELS[itemId] || [itemId, "\uD83D\uDCE6"];
                 const isConsumable = itemId === "water" || itemId === "sandwich";
+                const isMap = itemId === "map";
                 return (
                   <div className="train-inside-collection-item" key={itemId}>
                     <span>{icon} {label}</span>
+                    {isMap && onOpenInventoryMap && (
+                      <button
+                        type="button"
+                        onClick={onOpenInventoryMap}
+                      >
+                        Open map
+                      </button>
+                    )}
                     {isConsumable && (
                       <button type="button" onClick={() => handleConsumeItem(itemId)}>
                         {itemId === "water" ? "Drink" : "Eat"}
@@ -587,7 +646,7 @@ export default function TrainInside({ player, needs, acquiredItems = [], onBack,
           )}
         </div>
       )}
-      {isScrollOpen && (
+      {isScrollOpen && !isDeathFlowActive && (
         <div className="train-scroll-overlay" role="dialog" aria-label="Journey scrolls" aria-modal="true">
           <div className="train-scroll-popup">
             <button
@@ -635,10 +694,12 @@ export default function TrainInside({ player, needs, acquiredItems = [], onBack,
           </div>
         </div>
       )}
-      {isQuizOpen && (
+      {isQuizOpen && !isDeathFlowActive && (
         <JourneyKnowledgeQuiz
           scene={scene}
-          onComplete={(score) => onKnowledgeQuizComplete(scene, score)}
+          onComplete={(score) => {
+            if (!isDeathFlowActive) onKnowledgeQuizComplete(scene, score);
+          }}
           onContinue={startLevelCompletion}
         />
       )}

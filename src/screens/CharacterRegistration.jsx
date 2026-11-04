@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import "./CharacterRegistration.css";
 
 import { savePlayerProfile } from "../firebasePlayer";
@@ -469,6 +469,7 @@ export default function CharacterRegistration({
           needs: { life: 100, hunger: 86, water: 92 },
           money: 250,
           inventory: [],
+          pretoriaWelcomePackageClaimed: false,
           points: 0,
           stars: 0,
         });
@@ -534,14 +535,11 @@ export default function CharacterRegistration({
   const activeSkin = SKINS[skinIndex];
   const activeGuide = GUIDES[guideIndex];
 
-  const changeSkin = (direction) => {
-    setSkinIndex((currentIndex) => {
-      const nextIndex =
-        (currentIndex + direction + SKINS.length) % SKINS.length;
-
-      return nextIndex;
-    });
-  };
+  const changeSkin = useCallback((direction) => {
+    const nextIndex = (skinIndex + direction + SKINS.length) % SKINS.length;
+    setSkinIndex(nextIndex);
+    setSelectedSkin(SKINS[nextIndex].id);
+  }, [skinIndex]);
 
   const changeGuide = (direction) => {
     setGuideIndex((currentIndex) => {
@@ -594,7 +592,7 @@ export default function CharacterRegistration({
     return () => {
       window.removeEventListener("keydown", handleKeyDown);
     };
-  }, [step, activeSkin, activeGuide]);
+  }, [step, activeSkin, activeGuide, changeSkin]);
 
   return (
     <main className="character-registration" aria-label="Join the journey">
@@ -1043,7 +1041,10 @@ export default function CharacterRegistration({
                       : "carousel-dot"
                   }
                   aria-label={`View ${skin.name}`}
-                  onClick={() => setSkinIndex(index)}
+                  onClick={() => {
+                    setSkinIndex(index);
+                    setSelectedSkin(skin.id);
+                  }}
                 />
               ))}
             </div>

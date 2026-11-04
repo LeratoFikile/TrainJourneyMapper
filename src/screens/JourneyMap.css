@@ -45,7 +45,7 @@
   position: relative;
   z-index: 5;
   display: grid;
-  grid-template-columns: 90px minmax(0, 1fr) 220px;
+  grid-template-columns: 90px minmax(0, 1fr) 280px;
   align-items: start;
   gap: 18px;
   width: min(100% - 34px, 980px);
@@ -176,7 +176,7 @@
 .journey-map-footer span { color: var(--sun); font-size: 22px; }
 
 @media (max-width: 620px) {
-  .journey-map-header { grid-template-columns: 48px minmax(0, 1fr) 126px; gap: 5px; padding-top: 14px; }
+  .journey-map-header { grid-template-columns: 48px minmax(0, 1fr) 160px; gap: 5px; padding-top: 14px; }
   .journey-map-logo { width: 155px; }
   .journey-map-welcome-art { width: 132px; }
   .journey-map-actions { gap: 4px; }
@@ -200,4 +200,14 @@
   .journey-map-tree { width: 21%; }
   .journey-map-tree--three { width: 27%; }
   .journey-map-footer { margin-top: -2px; font-size: 10px; }
+}
+
+@media (max-width: 380px) {
+  .journey-map-header { grid-template-columns: 40px minmax(0, 1fr) 118px; }
+  .journey-map-actions { gap: 2px; }
+  .journey-map-action { width: 27px; min-height: 38px; padding-right: 1px; padding-left: 1px; }
+  .journey-map-action span { display: none; }
+  .journey-map-action img,
+  .journey-map-action b,
+  .journey-map-action svg { width: 19px; height: 19px; }
 }

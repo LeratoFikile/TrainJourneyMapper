@@ -1,16 +1,34 @@
 .bellville-level {
+  position: relative;
   display: grid;
+  width: 100%;
+  min-height: 100vh;
   min-height: 100dvh;
+  overflow: hidden;
   place-items: center;
-  padding: 72px 20px 24px;
   color: #4b3a33;
   background: linear-gradient(160deg, #a4d5e5, #f8d994);
+}
+
+.cape-town-level-background {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  min-height: 100vh;
+  min-height: 100dvh;
+  object-fit: cover;
+  object-position: center;
+  pointer-events: none;
 }
 
 .bellville-level-back {
   position: absolute;
   top: 22px;
   left: 24px;
+  z-index: 3;
   padding: 8px 13px;
   border: 3px solid #fff3c4;
   border-radius: 18px;
@@ -19,6 +37,40 @@
   box-shadow: 0 4px 0 #a96749;
   cursor: pointer;
   font-weight: 800;
+}
+
+.cape-town-mini-games-button {
+  position: absolute;
+  top: 22px;
+  right: 24px;
+  z-index: 3;
+  display: grid;
+  width: clamp(48px, 6vw, 64px);
+  aspect-ratio: 1;
+  place-items: center;
+  padding: 10px;
+  border: 3px solid #fff3c4;
+  border-radius: 50%;
+  color: #4b3a33;
+  background: #f6d66d;
+  box-shadow: 0 4px 0 #a96749, 0 7px 10px rgba(61, 43, 34, .28);
+  cursor: pointer;
+}
+
+.cape-town-mini-games-button svg {
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  fill: #ffe8a0;
+  stroke: #4b3a33;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 2.5;
+}
+
+.cape-town-mini-games-button:hover {
+  background: #ffe28a;
+  transform: translateY(-2px);
 }
 
 .bellville-arrival {
@@ -43,4 +95,26 @@
 
 .bellville-arrival h1 {
   margin: 0;
+}
+
+@media (max-width: 600px) {
+  .bellville-level-back {
+    top: 12px;
+    left: 12px;
+    padding: 7px 10px;
+    font-size: 12px;
+  }
+
+  .cape-town-mini-games-button {
+    top: 12px;
+    right: 12px;
+    width: 48px;
+    padding: 8px;
+  }
+
+  .kimberley-explore-button {
+    top: auto;
+    bottom: 24px;
+    left: 12px;
+  }
 }

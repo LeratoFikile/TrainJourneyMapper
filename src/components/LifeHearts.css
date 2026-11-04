@@ -1,0 +1,31 @@
+.life-hearts {
+  display: flex;
+  min-width: max-content;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2px;
+  color: #fffaf0;
+  filter: drop-shadow(0 2px 2px rgba(56, 39, 32, .55));
+}
+
+.life-hearts-icons {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  font-size: 21px;
+  line-height: 1;
+}
+
+.life-heart-full {
+  color: #ef6b72;
+}
+
+.life-heart-empty {
+  color: #fffaf0;
+}
+
+.life-hearts-timer {
+  font-size: 9px;
+  font-weight: 800;
+  white-space: nowrap;
+}

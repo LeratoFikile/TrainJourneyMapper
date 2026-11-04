@@ -32,6 +32,7 @@ export default function TrainBoarding({ onComplete, videoSource = boardingVideo 
         src={videoSource}
         autoPlay
         playsInline
+        preload="auto"
         onPlay={handleVideoPlay}
         onEnded={onComplete}
       />

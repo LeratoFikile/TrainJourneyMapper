@@ -60,22 +60,25 @@ function performanceMessage(score) {
   return "Time for Another Journey!";
 }
 
-export default function MatchMonument({ player, onBack, onPlayerStateChange }) {
+export default function MatchMonument({
+  player,
+  availableHearts = 3,
+  onBack,
+  onPlayerStateChange,
+}) {
   const [questions, setQuestions] = useState(createRound);
   const [questionIndex, setQuestionIndex] = useState(0);
   const [score, setScore] = useState(0);
   const [selectedDestination, setSelectedDestination] = useState(null);
   const [gameComplete, setGameComplete] = useState(false);
-  const [rewardClaimed, setRewardClaimed] = useState(false);
+  const [roundReward, setRoundReward] = useState(0);
   const rewardClaimedRef = useRef(false);
   const money = Number.isFinite(player?.money) ? player.money : 250;
-  const [roundStartingMoney, setRoundStartingMoney] = useState(money);
   const currentQuestion = questions[questionIndex];
 
   useEffect(() => {
     const music = createConfiguredAudio(miniGameMusic, "music");
     music.loop = true;
-    music.volume = 0.55;
     music.play().catch(() => undefined);
 
     return () => {
@@ -85,7 +88,7 @@ export default function MatchMonument({ player, onBack, onPlayerStateChange }) {
   }, []);
 
   const handleAnswer = (destination) => {
-    if (selectedDestination !== null || gameComplete) return;
+    if (availableHearts === 0 || selectedDestination !== null || gameComplete) return;
     setSelectedDestination(destination);
     if (destination === currentQuestion.landmark.destination) {
       setScore((currentScore) => currentScore + 10);
@@ -93,12 +96,13 @@ export default function MatchMonument({ player, onBack, onPlayerStateChange }) {
   };
 
   const handleNext = () => {
-    if (selectedDestination === null) return;
+    if (availableHearts === 0 || selectedDestination === null) return;
     if (questionIndex === questions.length - 1) {
       if (!rewardClaimedRef.current) {
         rewardClaimedRef.current = true;
-        setRewardClaimed(true);
-        onPlayerStateChange({ money: roundStartingMoney + REWARD });
+        const earnedReward = Math.round((score / 80) * REWARD);
+        setRoundReward(earnedReward);
+        if (earnedReward > 0) onPlayerStateChange({ money: money + earnedReward });
       }
       setGameComplete(true);
       return;
@@ -109,20 +113,18 @@ export default function MatchMonument({ player, onBack, onPlayerStateChange }) {
   };
 
   const handlePlayAgain = () => {
-    setRoundStartingMoney(roundStartingMoney + REWARD);
+    if (availableHearts === 0) return;
     setQuestions(createRound());
     setQuestionIndex(0);
     setScore(0);
+    setRoundReward(0);
     setSelectedDestination(null);
     setGameComplete(false);
-    setRewardClaimed(false);
     rewardClaimedRef.current = false;
   };
 
   const isCorrect = selectedDestination === currentQuestion.landmark.destination;
-  const displayMoney = gameComplete && rewardClaimed
-    ? roundStartingMoney + REWARD
-    : money;
+  const displayMoney = money;
 
   return (
     <main className="match-monument" aria-label="Match the Monument mini-game">
@@ -137,11 +139,19 @@ export default function MatchMonument({ player, onBack, onPlayerStateChange }) {
         </div>
         <img className="match-monument-logo" src={monumentLogo} alt="Match the Monument" />
 
-        {gameComplete ? (
+        {availableHearts === 0 ? (
+          <section className="match-monument-result" role="dialog" aria-modal="true" aria-labelledby="match-monument-result-title">
+            <h1 id="match-monument-result-title">All hearts lost</h1>
+            <p>Wait for a heart to regenerate before continuing.</p>
+            <div className="match-monument-result-actions">
+              <button type="button" onClick={onBack}>Exit</button>
+            </div>
+          </section>
+        ) : gameComplete ? (
           <section className="match-monument-result" role="dialog" aria-modal="true" aria-labelledby="match-monument-result-title">
             <h1 id="match-monument-result-title">{performanceMessage(score)}</h1>
             <p className="match-monument-final-score">Final score: {score} / 80</p>
-            <p>You earned R{REWARD}.</p>
+            <p>You earned R{roundReward}.</p>
             <div className="match-monument-result-actions">
               <button type="button" onClick={handlePlayAgain}>Play Again</button>
               <button type="button" onClick={onBack}>Exit</button>

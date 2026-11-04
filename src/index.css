@@ -32,6 +32,18 @@ button {
 img {
   max-width: 100%;
   display: block;
+  -webkit-tap-highlight-color: transparent;
+}
+
+video::-webkit-media-controls-start-playback-button,
+video::-webkit-media-controls-overlay-play-button {
+  display: none !important;
+  -webkit-appearance: none;
+}
+
+video {
+  max-width: 100%;
+  display: block;
 }
 
 #root {

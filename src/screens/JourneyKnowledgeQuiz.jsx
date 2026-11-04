@@ -204,6 +204,10 @@ export default function JourneyKnowledgeQuiz({ scene, onComplete, onContinue }) 
 
   const handleNext = () => {
     if (selectedAnswer === null) return;
+    if (selectedAnswer !== question.answer) {
+      setSelectedAnswer(null);
+      return;
+    }
 
     if (questionIndex === questions.length - 1) {
       if (!completionNotified.current) {
@@ -282,7 +286,9 @@ export default function JourneyKnowledgeQuiz({ scene, onComplete, onContinue }) 
                   disabled={selectedAnswer === null}
                   onClick={handleNext}
                 >
-                  {questionIndex === questions.length - 1 ? "See Quiz Results" : "Next Question"}
+                  {selectedAnswer !== null && !answerIsCorrect
+                    ? "Try Again"
+                    : questionIndex === questions.length - 1 ? "See Quiz Results" : "Next Question"}
                 </button>
               </section>
             </>
